@@ -1,15 +1,15 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="about flex flex-col gap-4">
+    <h1>Count: {{ count }}</h1>
+    <Button label="Add" @click="count++" />
   </div>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+<style></style>
+
+<script setup>
+import Button from 'primevue/button'
+import { ref } from 'vue'
+
+const count = ref(0)
+</script>
