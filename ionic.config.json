@@ -1,0 +1,7 @@
+{
+  "name": "campusquest-spa",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
