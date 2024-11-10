@@ -2,16 +2,25 @@
 
 [Quest Campus - Frontend Documentation](./DOCUMENTATION.md)
 
-This template should help get you started developing with Vue 3 in Vite.
+## Libraries
+
+[Vue.js - Frontend Framework](https://vuejs.org/)\
+[VueUse - Utility Extension for Vue.js](https://vueuse.org/guide/)\
+[VueRouter - SPA Router for Vue.js](https://router.vuejs.org/)\
+[Pinia - State Management for Vue.js](https://pinia.vuejs.org/)\
+[PrimeVue - Component Library for Vue.js](https://primevue.org/)\
+[Tailwind - CSS Framework](https://tailwindcss.com/)\
+[Ionic Capacitor - Native Runtime for Mobile](https://capacitorjs.com/)
 
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/)
 
-Extensions:
-[Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-Tailwind CSS IntelliSense (For Tailwind IntelliSense Support)
-Ionic (For building to iOS and Android.
+### Extensions:
+
+- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Tailwind CSS IntelliSense (For Tailwind IntelliSense Support)
+- Ionic (For building to iOS and Android.
 
 ## Customize configuration
 
