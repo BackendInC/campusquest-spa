@@ -3,17 +3,11 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <div
-    class="w-full h-full bg-[#E55733] col-span-5 relative flex flex-col justify-end"
-  >
+  <div class="w-full h-screen bg-[#E55733] relative flex flex-col justify-end">
     <div class="absolute w-full h-full flex justify-center items-center z-10">
-      <img
-        src="/avatar.svg"
-        class="h-[100vh] aspect-square mt-4 mb-40"
-        style="max-width: unset !important"
-      />
+      <img src="../assets/avatar.svg" class="aspect-square mt-4 mb-40" />
     </div>
-    <div class="flex flex-col gap-10 text-white pb-12 px-3 z-20">
+    <div class="flex flex-col gap-12 text-white pb-12 px-3 z-20">
       <div class="flex flex-col gap-1 text-white">
         <h1 class="text-2xl font-bold">Connect with the Campus</h1>
         <p class="text-base">
