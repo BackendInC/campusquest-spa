@@ -15,7 +15,7 @@ import { RouterLink } from 'vue-router'
         </p>
       </div>
       <div class="flex justify-end">
-        <RouterLink to="/login">
+        <RouterLink :to="{ name: 'login' }">
           <div
             class="h-14 w-14 rounded-full bg-white flex justify-center items-center"
           >

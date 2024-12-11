@@ -21,6 +21,10 @@
               <label for="password">Password</label>
               <Password name="password" placeholder="********" fluid />
             </div>
+            <div class="flex flex-col">
+              <label for="re-password">Confirm Password</label>
+              <Password name="password_confirm" placeholder="********" fluid />
+            </div>
             <Message
               v-if="$form.username?.invalid"
               severity="error"
@@ -35,14 +39,21 @@
               variant="simple"
               >{{ $form.password.error?.message }}</Message
             >
-            <Button type="submit" severity="danger" label="Login" />
+            <Message
+              v-if="$form.password_confirm?.invalid"
+              severity="error"
+              size="small"
+              variant="simple"
+              >{{ $form.password_confirm.error?.message }}</Message
+            >
+            <Button type="submit" severity="primary" label="Register" />
           </div>
         </div>
       </Form>
 
       <hr color="black" width="100%" class="h-0.5 my-8" />
-      <Button severity="primary" v-on:click="router.push({ name: 'register' })"
-        >Register</Button
+      <Button severity="danger" @click="router.push({ name: 'login' })"
+        >Login</Button
       >
     </div>
   </div>
@@ -64,6 +75,7 @@ const toast = useToast()
 const initialValues = reactive({
   username: '',
   password: '',
+  password_confirm: '',
 })
 
 const resolver = ({ values }) => {
@@ -75,6 +87,16 @@ const resolver = ({ values }) => {
 
   if (!values.password) {
     errors.password = [{ message: 'Password is required.' }]
+  }
+
+  if (!values.password_confirm) {
+    errors.password_confirm = [
+      { message: 'Password confirmation is required.' },
+    ]
+  }
+
+  if (values.password !== values.password_confirm) {
+    errors.password_confirm = [{ message: 'Passwords do not match.' }]
   }
 
   return {
@@ -89,6 +111,8 @@ const onFormSubmit = ({ valid }) => {
       summary: 'Form is submitted.',
       life: 3000,
     })
+
+    router.push({ name: 'email_check' })
   }
 }
 </script>
