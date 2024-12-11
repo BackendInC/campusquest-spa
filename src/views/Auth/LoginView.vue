@@ -89,6 +89,8 @@ const onFormSubmit = ({ valid }) => {
       summary: 'Form is submitted.',
       life: 3000,
     })
+
+    router.push({ name: 'home' })
   }
 }
 </script>
