@@ -7,17 +7,30 @@ const router = createRouter({
     {
       path: '/',
       name: 'splash-screen',
-      component: SplashScreen
+      component: SplashScreen,
     },
-    /* {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    } */
-  ]
+    {
+      path: '/auth',
+      name: 'auth',
+      children: [
+        {
+          path: '/login',
+          name: 'login',
+          component: () => import('../views/Auth/LoginView.vue'),
+        },
+        {
+          path: '/register',
+          name: 'register',
+          component: () => import('../views/Auth/RegisterView.vue'),
+        },
+        {
+          path: '/email-check',
+          name: 'email_check',
+          component: () => import('../views/Auth/EmailCheckView.vue'),
+        },
+      ],
+    },
+  ],
 })
 
 export default router
