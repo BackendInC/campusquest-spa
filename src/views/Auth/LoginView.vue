@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-normal h-screen bg-white">
     <div class="px-5 flex flex-col flex-1">
-      <img src="../assets/avatar.svg" class="w-16 aspect-square" />
+      <img src="@/assets/avatar.svg" class="w-16 aspect-square" />
       <h1 class="text-2xl font-bold">Join The Campus Quest!</h1>
       <Form v-slot="$form" :initialValues :resolver @submit="onFormSubmit">
         <div class="flex flex-col">

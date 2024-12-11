@@ -16,17 +16,17 @@ const router = createRouter({
         {
           path: '/login',
           name: 'login',
-          component: () => import('../views/LoginView.vue'),
+          component: () => import('../views/Auth/LoginView.vue'),
         },
         {
           path: '/register',
           name: 'register',
-          component: () => import('../views/RegisterView.vue'),
+          component: () => import('../views/Auth/RegisterView.vue'),
         },
         {
           path: '/email-check',
           name: 'email_check',
-          component: () => import('../views/EmailCheckView.vue'),
+          component: () => import('../views/Auth/EmailCheckView.vue'),
         },
       ],
     },
