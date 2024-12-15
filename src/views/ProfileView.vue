@@ -46,7 +46,9 @@
       </div>
     </div>
     <!-- POSTS SECTION -->
-    <div class="bg-white w-full rounded-t-2xl px-4 pt-4 grid grid-cols-3 gap-1">
+    <div
+      class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 gap-1"
+    >
       <img
         v-for="(post, index) in profileData.posts"
         v-bind:key="index"
@@ -63,6 +65,8 @@ import { RouterLink } from 'vue-router'
 import MenuBar from '@/components/MenuBar.vue'
 
 import honeycomb from '@/assets/honeycomb.png'
+import imageFallback from '@/assets/image-fallback.jpg'
+
 const backgroundImage = `url(${honeycomb})`
 
 const profileData = ref({
@@ -70,87 +74,87 @@ const profileData = ref({
   postCount: 120,
   friendCount: 120,
   badgeCount: 120,
-  profilePhoto: '/image-fallback.jpg',
+  profilePhoto: imageFallback,
   posts: [
     {
       post_id: 1,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 2,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 3,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 4,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 5,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 6,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 7,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 8,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 9,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 10,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 11,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 12,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 13,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 14,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 15,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 16,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 17,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 18,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 19,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
     {
       post_id: 20,
-      post_image: '/image-fallback.jpg',
+      post_image: imageFallback,
     },
   ],
 })

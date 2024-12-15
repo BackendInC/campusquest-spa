@@ -1,115 +1,128 @@
 <template>
-  <div
-    class="w-full h-full"
-    style="
-      background-image: url(yellow_honeycomb.png);
-      background-size: contain;
-      background-color: #31556e;
-      padding-top: 24px;
-    "
-  >
-    <div class="p-5 flex flex-col gap-4">
-      <div class="flex items-center justify-between pb-24">
-        <h1 class="text-white text-2xl">Home</h1>
+  <div class="w-full h-full bg-[#F0D269]">
+    <!-- PROFILE SECTION -->
+    <div
+      class="px-4 pt-20 pb-4 flex flex-col gap-4"
+      :style="{
+        backgroundImage: backgroundImage,
+        backgroundBlendMode: 'luminosity',
+        backgroundPosition: 'center',
+        backgroundColor: '#F0D269',
+      }"
+    >
+      <!-- Name and Settings Icons -->
+
+      <h1 class="text-white text-2xl font-bold">Explore Feed</h1>
+
+      <!-- Profile Photo and Stats -->
+    </div>
+    <!-- POSTS SECTION -->
+    <div
+      class="bg-white w-full rounded-t-[3rem] pt-2 flex flex-col items-center gap-2"
+    >
+      <SelectButton
+        v-model="feedSelector"
+        :options="feedOptions"
+        size="small"
+        :optionDisabled="option => option === feedSelector"
+      />
+
+      <div class="grid gap-4">
+        <div v-for="(post, index) in posts" v-bind:key="index">
+          <div class="flex items-center gap-2 ml-2 mb-2">
+            <img :src="post.post_image" width="15%" class="rounded-full" />
+            <div>
+              <h1 class="font-bold">{{ post.post_username }}</h1>
+              <h2 class="text-xs font-light">{{ post.quest_name }}</h2>
+            </div>
+          </div>
+
+          <img :src="post.post_image" class="aspect-square" width="100%" />
+
+          <div class="p-2 flex gap-2">
+            <div class="flex items-center gap-1">
+              <i class="pi pi-thumbs-up" style="font-size: 1.5rem" />
+              <h1 class="font-bold text-lg">{{ post.post_upvotes }}</h1>
+            </div>
+            <div class="flex items-center gap-1">
+              <i class="pi pi-thumbs-down" style="font-size: 1.5rem" />
+              <h1 class="font-bold text-lg">{{ post.post_downvotes }}</h1>
+            </div>
+          </div>
+
+          <h1>
+            <span class="font-bold">{{ post.post_fullname }}</span>
+            {{ post.post_description }}
+          </h1>
+        </div>
       </div>
     </div>
-    <div class="bg-white rounded-t-3xl p-5 pt-5 grid grid-cols-1 gap-4">
-      <div v-for="(post, index) in posts" v-bind:key="index">
-        <img
-          :src="post.post_image"
-          class="object-cover w-full h-full rounded-2xl"
-        />
-      </div>
-    </div>
-    <MenuBar />
   </div>
+  <MenuBar />
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import SelectButton from 'primevue/selectbutton'
 import MenuBar from '@/components/MenuBar.vue'
+
+import honeycomb from '@/assets/honeycomb.png'
+import imageFallBack from '@/assets/image-fallback.jpg'
+
+const backgroundImage = `url(${honeycomb})`
+
+const feedSelector = ref('All')
+const feedOptions = ref(['All', 'Friends'])
 
 const posts = ref([
   {
     post_id: 1,
-    post_image: '/image-fallback.jpg',
+    post_image: imageFallBack,
+    post_username: 'Mert',
+    post_upvotes: 2,
+    post_downvotes: 2,
+    post_fullname: 'Mert Bozkurtlar',
+    quest_name: 'Quest Name',
+    post_description: 'This is a post description',
   },
   {
     post_id: 2,
-    post_image: '/image-fallback.jpg',
+    post_image: imageFallBack,
+    post_username: 'Gizem',
+    post_upvotes: 2,
+    post_downvotes: 2,
+    post_fullname: 'Gizem Aydin',
+    quest_name: 'Quest Name',
+    post_description: 'This is a great quest',
   },
   {
     post_id: 3,
-    post_image: '/image-fallback.jpg',
+    post_image: imageFallBack,
+    post_username: 'Mert',
+    post_upvotes: 2,
+    post_downvotes: 2,
+    post_fullname: 'Mert Bozkurtlar',
+    quest_name: 'Quest Name',
+    post_description: 'This is a post description',
   },
   {
     post_id: 4,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 5,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 6,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 7,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 8,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 9,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 10,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 11,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 12,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 13,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 14,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 15,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 16,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 17,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 18,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 19,
-    post_image: '/image-fallback.jpg',
-  },
-  {
-    post_id: 20,
-    post_image: '/image-fallback.jpg',
+    post_image: imageFallBack,
+    post_username: 'Gizem',
+    post_upvotes: 2,
+    post_downvotes: 2,
+    post_fullname: 'Gizem Aydin',
+    quest_name: 'Quest Name',
+    post_description: 'This is a great quest',
   },
 ])
 </script>
+
+<style>
+.p-togglebutton:disabled {
+  opacity: 1;
+  background: var(--p-togglebutton-background);
+  border-color: var(--p-togglebutton-border-color);
+  color: var(--p-togglebutton-color);
+}
+</style>
