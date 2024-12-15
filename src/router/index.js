@@ -9,11 +9,6 @@ const router = createRouter({
       component: () => import('../views/SplashScreen.vue'),
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('../views/ProfilePage.vue'),
-    },
-    {
       path: '/auth',
       name: 'auth',
       children: [

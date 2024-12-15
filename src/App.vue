@@ -3,7 +3,9 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="app w-screen h-screen bg-white">
     <RouterView />
   </div>
 </template>
+
+<style></style>

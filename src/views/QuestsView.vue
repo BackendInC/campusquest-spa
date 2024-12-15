@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen bg-white">
+  <div class="w-full h-full bg-white">
     PLACEHOLDER QUESTS
     <MenuBar />
   </div>
