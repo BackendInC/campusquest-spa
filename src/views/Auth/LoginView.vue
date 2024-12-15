@@ -15,11 +15,18 @@
                 name="username"
                 type="text"
                 placeholder="user@itu.edu.tr"
+                autocapitalize="none"
               />
             </div>
             <div class="flex flex-col">
               <label for="password">Password</label>
-              <Password name="password" placeholder="********" fluid />
+              <Password
+                name="password"
+                placeholder="********"
+                fluid
+                :feedback="false"
+                :toggleMask="true"
+              />
             </div>
             <Message
               v-if="$form.username?.invalid"
