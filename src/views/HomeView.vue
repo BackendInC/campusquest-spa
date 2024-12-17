@@ -1,31 +1,13 @@
 <template>
-  <div class="w-full h-full bg-[#F0D269]">
-    <!-- PROFILE SECTION -->
-    <div
-      class="px-4 pt-20 pb-4 flex flex-col gap-4"
-      :style="{
-        backgroundImage: backgroundImage,
-        backgroundBlendMode: 'luminosity',
-        backgroundPosition: 'center',
-        backgroundColor: '#F0D269',
-      }"
-    >
-      <!-- Name and Settings Icons -->
-
-      <h1 class="text-white text-2xl font-bold">Explore Feed</h1>
-
-      <!-- Profile Photo and Stats -->
-    </div>
-    <!-- POSTS SECTION -->
-    <div
-      class="bg-white w-full rounded-t-[3rem] pt-2 flex flex-col items-center gap-2"
-    >
+  <Content title="Explore Feed" bgColor="#F0D269" titleColor="white">
+<div class="grid place-items-center">
       <SelectButton
         v-model="feedSelector"
         :options="feedOptions"
         size="small"
         :optionDisabled="option => option === feedSelector"
-      />
+        />
+      </div>
 
       <div class="grid gap-4">
         <div v-for="(post, index) in posts" v-bind:key="index">
@@ -56,8 +38,7 @@
           </h1>
         </div>
       </div>
-    </div>
-  </div>
+  </Content>
   <MenuBar />
 </template>
 
@@ -65,6 +46,7 @@
 import { ref } from 'vue'
 import SelectButton from 'primevue/selectbutton'
 import MenuBar from '@/components/MenuBar.vue'
+import Content from '@/components/Content.vue'
 
 import honeycomb from '@/assets/honeycomb.png'
 import imageFallBack from '@/assets/image-fallback.jpg'
