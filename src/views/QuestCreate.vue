@@ -1,5 +1,5 @@
 <template>
-<Content title="Create a new quest" bgColor="#00aa00" titleColor="white">
+<Content title="Create a new quest" bgColor="#54af7d" titleColor="white">
   <Form v-slot="$form" @submit="onFormSubmit" class="flex flex-col gap-4 p-4">
     <div class="flex items-top gap-2">
       <label class="w-24 p-1 text-right" for="quest_title">Quest title</label>
@@ -19,7 +19,7 @@
           >
           <img
             @click="selectedIconIndex = index" :src="icon.path" :alt="icon.name"
-            :class="{ 'bg-blue-200 outline outline-1 outline-black' : index == selectedIconIndex }"
+            :class="{ 'outline outline-2 outline-black' : index == selectedIconIndex }"
             class="w-16 p-1 cursor-pointer"
             />
         </div>
@@ -45,11 +45,7 @@ const selectedIconIndex = ref(0);
 
 const icons = ref([
     { name: 'regular', path: "/quest_icon.png" },
-    { name: 'golden', path: "/quest_icon_golden.png" },
-    { name: 'a_icon', path: "https://dummyimage.com/100x100/9e0000/fff.png&text=A"},
-    { name: 'b_icon', path: "https://dummyimage.com/100x100/009e00/fff.png&text=B"},
-    { name: 'c_icon', path: "https://dummyimage.com/100x100/00009e/fff.png&text=C"},
-    { name: 'd_icon', path: "https://dummyimage.com/100x100/660066/fff.png&text=D"}
+    { name: 'golden', path: "/quest_icon_golden.png" }
 ]);
 
 const toast = useToast()
