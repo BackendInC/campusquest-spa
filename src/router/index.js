@@ -45,10 +45,20 @@ const router = createRouter({
       component: () => import('../views/FriendListView.vue'),
     },
     {
+      path: '/badges',
+      name: 'badges',
+      component: () => import('../views/BadgesView.vue'),
+    },
+    {
       path: '/quests',
       name: 'quests',
       component: () => import('../views/QuestsView.vue'),
     },
+    {
+      path: '/customize-bee',
+      name: 'customize-bee',
+      component: () => import('../views/CustomizationView.vue')
+    }
   ],
 })
 
