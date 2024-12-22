@@ -13,7 +13,9 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "ionic:build": "npm run build",
-    "ionic:serve": "vite dev --host"
+    "ionic:serve": "vite dev --host",
+    "ionic:ios": "npx cap copy && npx cap open ios",
+    "ionic:android": "npx cap copy && npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "6.1.2",

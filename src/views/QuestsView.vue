@@ -40,6 +40,7 @@
     >
     Show completed
   </button>
+  
   </div>
 
     <ul class="space-y-4">

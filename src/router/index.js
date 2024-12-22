@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SplashScreen from '../views/SplashScreen.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'splash-screen',
-      component: SplashScreen,
+      component: () => import('../views/SplashScreen.vue'),
     },
     {
       path: '/auth',
@@ -39,6 +38,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
+    },
+    {
+      path: '/friends',
+      name: 'friends',
+      component: () => import('../views/FriendListView.vue'),
     },
     {
       path: '/quests',
