@@ -48,6 +48,10 @@ const router = createRouter({
       path: '/badges',
       name: 'badges',
       component: () => import('../views/BadgesView.vue'),
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/SettingsView.vue'),
     },
     {
       path: '/quests',
@@ -58,7 +62,12 @@ const router = createRouter({
       path: '/customize-bee',
       name: 'customize-bee',
       component: () => import('../views/CustomizationView.vue')
-    }
+    },
+    {
+      path: '/quest_create',
+      name: 'quest_create',
+      component: () => import('../views/QuestCreate.vue'),
+    },
   ],
 })
 
