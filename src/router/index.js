@@ -45,6 +45,11 @@ const router = createRouter({
       component: () => import('../views/FriendListView.vue'),
     },
     {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/SettingsView.vue'),
+    },
+    {
       path: '/quests',
       name: 'quests',
       component: () => import('../views/QuestsView.vue'),
