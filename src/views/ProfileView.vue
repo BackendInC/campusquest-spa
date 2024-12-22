@@ -36,12 +36,12 @@
             </p>
             <p class="text-white text-s">Friends</p>
           </RouterLink>
-          <div class="flex flex-col items-center">
+          <RouterLink :to="`/badges`" class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
               {{ profileData.badgeCount }}
             </p>
             <p class="text-white text-s">Badges</p>
-          </div>
+          </RouterLink>
         </div>
       </div>
     </div>
