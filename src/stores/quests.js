@@ -78,5 +78,5 @@ export const useQuestsStore = defineStore('quests', () => {
     })
   }
 
-  return { quests, display_filter, quests_displayed, submitQuest }
+  return { quests, display_filter, quests_displayed, fetchQuests, submitQuest }
 })

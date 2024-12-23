@@ -2,6 +2,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import imageFallback from '@/assets/image-fallback.jpg'
 
+// IMPORTANT: This is a store to hold data for the user profile page
+// The purpose is not to current user data, but to display the profile of any user
+// If you are looking for a store to manage the current user data, check the auth.js store
 export const useUserProfileStore = defineStore('userProfile', () => {
   const profileData = ref({
     name: 'Susan Clay',
