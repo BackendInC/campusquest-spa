@@ -1,165 +1,197 @@
 <template>
-<div class="w-screen h-screen bg-white">
-  <!-- Header -->
-  <header
-    class="fixed top-[0%] w-full px-[4%] bg-emerald-500 text-white py-7 rounded-b-3xl shadow-md overflow-hidden"
+  <div class="w-full h-full bg-white">
+    <div
+      class="px-4 pt-20 pb-4 flex flex-col gap-4 bg-emerald-500 rounded-3xl mb-2"
+      :style="{
+        backgroundImage: backgroundImage,
+        backgroundBlendMode: 'luminosity',
+        backgroundPosition: 'center',
+      }"
     >
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="text-2xl font-bold">Quest page</div>
+      <h1 class="text-2xl font-bold text-white">Quests</h1>
     </div>
-    <img
-      src="/honeycomb.png" 
-      class="absolute top-0 right-0 opacity-40 transform scale-100 -translate-y-40"
-      />
-  </header>
-  
-  <!-- Quest List -->
-  <main class="container mx-auto px-4 mt-6">
-  <div class="min-h-[80px] overflow-y-auto"> </div>
 
-  <div
-    class="flex mb-3">
-  <button
-    @click="display_filter = 0"
-    :class="[(display_filter === 0) ? 'bg-emerald-500' : 'bg-gray-500']"
-    class="text-white text-sm font-medium px-4 py-1 rounded-full ml-1"
-    >
-    Show all
-  </button>
-  <button
-    @click="display_filter = 1"
-    :class="[(display_filter === 1) ? 'bg-emerald-500' : 'bg-gray-500']"
-    class="text-white text-sm font-medium px-4 py-1 rounded-full ml-1"
-    >
-    Show active
-  </button>
-  <button
-    @click="display_filter = 2"
-    :class="[(display_filter === 2) ? 'bg-emerald-500' : 'bg-gray-500']"
-    class="text-white text-sm font-medium px-4 py-1 rounded-full ml-1"
-    >
-    Show completed
-  </button>
-  
-  </div>
-
-    <ul class="space-y-4">
-      <li
-        v-for="quest in quests_displayed"
-        :key="quest.id"
-        class="bg-white p-4 shadow rounded-md"
+    <!-- Quest List -->
+    <main class="container mx-auto px-4">
+      <div class="flex mb-3">
+        <Button
+          @click="(display_filter = 'all')"
+          :class="[display_filter === 'all' ? 'bg-emerald-500' : 'bg-gray-500']"
+          class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
         >
-        <div
-          class="flex items-center justify-between"
-          >
-          <div
-              @click="toggle_details(quest)"
-            class="flex space-x-4 items-center">
+          All
+        </Button>
+        <Button
+          @click="(display_filter = 'active')"
+          :class="[
+            display_filter === 'active' ? 'bg-emerald-500' : 'bg-gray-500',
+          ]"
+          class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
+        >
+          Active
+        </Button>
+        <Button
+          @click="(display_filter = 'pending')"
+          :class="[
+            display_filter === 'pending' ? 'bg-emerald-500' : 'bg-gray-500',
+          ]"
+          class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
+        >
+          Pending
+        </Button>
+        <Button
+          @click="(display_filter = 'completed')"
+          :class="[
+            display_filter === 'completed' ? 'bg-emerald-500' : 'bg-gray-500',
+          ]"
+          class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
+        >
+          Completed
+        </Button>
+      </div>
+
+      <Accordion value="null">
+        <AccordionPanel
+          v-for="quest in quests_displayed"
+          :key="quest.id"
+          :value="quest.id"
+        >
+          <AccordionHeader>
             <img
-              class="h-11 w-11 text-gray-500"
-              :src="quest_icon_src[quest.type]"
-              />
-            <h3 :class="{'line-through decoration-2' : quest.completed }" class="text-xl font-bold">{{ quest.title }}</h3>
-          </div>
-          <div
-            class="flex space-x-4"
+              :style="{
+                filter:
+                  quest.status === 'completed'
+                    ? 'brightness(100%) sepia(100%) saturate(500%) hue-rotate(45deg)'
+                    : quest.status === 'pending'
+                      ? 'brightness(100%) sepia(100%) saturate(500%) hue-rotate(240deg)'
+                      : '',
+              }"
+              class="h-6 w-6"
+              src="@/assets/quest_icon.png"
+            />
+            <span
+              :class="{ 'line-through': quest.status === 'completed' }"
+              class="text-xl font-bold"
+              >{{ quest.title }}</span
             >
-            <button
-              @click="toggle_completed(quest)"
-              :class="{'line-through decoration-1' : quest.completed}"
-              class="mt-2 bg-emerald-500 text-white text-sm font-medium px-4 py-1 rounded-full"
+          </AccordionHeader>
+          <AccordionContent>
+            <div class="flex flex-col gap-4">
+              <p>{{ quest.details }}</p>
+              <Button
+                class="bg-blue-400"
+                @click="send_quest(quest.id)"
+                v-if="!quest.completed"
+                >Submit</Button
               >
-              Done
-            </button>
-            <button
-              @click="toggle_details(quest)"
-              class="mt-3 text-emerald-500 hover:text-emerald-700 text-sm py-1"
-              >
-              <i :class="[quest.expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down']" style="font-size: 1rem"></i>
-            </button>      
-          </div>
-        </div>
-        <div>
-          <p :class="{'line-through decoration-1' : quest.completed}" class="mt-2 text-sm text-gray-500">
-            {{ quest.expanded ? quest.details : '' }}
-          </p>
-        </div>
-      </li>
-    </ul>
-    <div class="min-h-[150px] overflow-y-auto"> </div>
-  </main>
-  
-  <MenuBar />
-</div>
+              <img v-if="quest.completed" :src="quest.image" />
+            </div>
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
+    </main>
+
+    <MenuBar />
+  </div>
 </template>
 
 <script setup>
 import MenuBar from '@/components/MenuBar.vue'
+import Accordion from 'primevue/accordion'
+import AccordionPanel from 'primevue/accordionpanel'
+import AccordionHeader from 'primevue/accordionheader'
+import AccordionContent from 'primevue/accordioncontent'
+import Button from 'primevue/button'
 import { ref, computed } from 'vue'
+import { Camera, CameraResultType } from '@capacitor/camera'
 
-const quest_icon_src = ref({
-    regular : "/quest_icon.png",
-    golden : "/quest_icon_golden.png",
-});
+import honeycomb from '@/assets/honeycomb.png'
+const backgroundImage = `url(${honeycomb})`
 
 const quests = ref([
   {
-    title: "Find the Hidden Pond",
-    type: "regular",
-    details: "Explore the campus to discover the hidden pond near the science building. It's a peaceful spot, perfect for some quiet time.",
-    expanded: false, completed: false
+    id: 1,
+    title: 'Find the Hidden Pond',
+    details:
+      "Explore the campus to discover the hidden pond near the science building. It's a peaceful spot, perfect for some quiet time.",
+    status: 'active',
   },
   {
-    title: "Library Challenge",
-    type: "regular",
-    details: "Visit the library and find a book on your favorite subject. Take a picture of it and show it to the librarian to complete this quest.",
-    expanded: false, completed: false
+    id: 2,
+    title: 'Library Challenge',
+    details:
+      'Visit the library and find a book on your favorite subject. Take a picture of it and show it to the librarian to complete this quest.',
+    status: 'pending',
   },
   {
-    title: "Campus Fitness Walk",
-    type: "regular",
-    details: "Walk around the entire campus and snap a selfie in front of the main statue. Share the picture in the group to earn points.",
-    expanded: false, completed: false
+    id: 3,
+    title: 'Campus Fitness Walk',
+    details:
+      'Walk around the entire campus and snap a selfie in front of the main statue. Share the picture in the group to earn points.',
+    status: 'completed',
   },
   {
+    id: 4,
     title: "Professor's Secret",
-    type: "regular",
-    details: "Ask a professor about a topic they are passionate about, and write down the most interesting thing you learned. Share it with your classmates.",
-    expanded: false, completed: false
+    details:
+      'Ask a professor about a topic they are passionate about, and write down the most interesting thing you learned. Share it with your classmates.',
+    status: 'active',
   },
   {
-    title: "Art Gallery Hunt",
-    type: "golden",
-    details: "Find three pieces of art on campus that you find inspiring. Take a photo with each and add them to your quest report.",
-    expanded: false, completed: false
+    id: 5,
+    title: 'Art Gallery Hunt',
+    details:
+      'Find three pieces of art on campus that you find inspiring. Take a photo with each and add them to your quest report.',
+    status: 'active',
   },
   {
-    title: "Community Service",
-    type: "golden",
-    details: "Volunteer at the community center for at least one hour. Snap a picture while helping out and share it with the group to complete the quest.",
-    expanded: false, completed: false
-  }
-]);
+    id: 6,
+    title: 'Community Service',
+    details:
+      'Volunteer at the community center for at least one hour. Snap a picture while helping out and share it with the group to complete the quest.',
+    status: 'active',
+  },
+])
 
-const display_filter = ref(0); // 0 - show all, 1 - show active, 2 - show completed
+const display_filter = ref('all') // 0 - show all, 1 - show active, 2 - show completed, 3- show waiting_approval
 
-function toggle_details(quest) {
-  quest.expanded = !quest.expanded;
-}
-
-function toggle_completed(quest) {
-  quest.completed = !quest.completed;
+function send_quest(quest_id) {
+  takePicture().then(image => {
+    quests.value = quests.value.map(e => {
+      if (e.id === quest_id) {
+        e.completed = true
+        e.image = image.webPath
+      }
+      return e
+    })
+  })
 }
 
 const quests_displayed = computed(() => {
-   if (display_filter.value === 0) return quests.value;
-    return quests.value.filter((e) => {
-        if (display_filter.value === 1)
-            return e.completed === false;
-        return e.completed === true;
-    });
-});
+  if (display_filter.value === 'all') return quests.value
+  return quests.value.filter(e => {
+    return e.status === display_filter.value
+  })
+})
 
+const takePicture = async () => {
+  const image = await Camera.getPhoto({
+    quality: 90,
+    allowEditing: true,
+    resultType: CameraResultType.Uri,
+  })
+
+  return image
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.yellow img {
+  filter: invert(85%) sepia(100%) saturate(500%) hue-rotate(45deg); /* Golden */
+  scale: 1.2;
+}
+
+.purple img {
+  filter: invert(85%) sepia(100%) saturate(500%) hue-rotate(270deg); /* Purple */
+}
+</style>

@@ -2,7 +2,7 @@
   <div class="w-full h-full bg-[#31556e]">
     <!-- PROFILE SECTION -->
     <div
-      class="px-4 pt-10 pb-4 flex flex-col gap-4"
+      class="px-4 pt-12 pb-4 flex flex-col gap-4"
       :style="{
         backgroundImage: backgroundImage,
         backgroundBlendMode: 'luminosity',

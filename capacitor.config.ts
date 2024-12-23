@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'campusquest-spa',
   webDir: 'dist',
   server: {
-    url: 'http://192.168.1.6:5173',
+    url: 'http://localhost:5173/',
     cleartext: true,
   },
 }
