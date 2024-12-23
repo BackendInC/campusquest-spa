@@ -15,34 +15,44 @@
     <main class="container mx-auto px-4">
       <div class="flex mb-3">
         <Button
-          @click="(display_filter = 'all')"
-          :class="[display_filter === 'all' ? 'bg-emerald-500' : 'bg-gray-500']"
+          @click="questsStore.display_filter = 'all'"
+          :class="[
+            questsStore.display_filter === 'all'
+              ? 'bg-emerald-500'
+              : 'bg-gray-500',
+          ]"
           class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
         >
           All
         </Button>
         <Button
-          @click="(display_filter = 'active')"
+          @click="questsStore.display_filter = 'active'"
           :class="[
-            display_filter === 'active' ? 'bg-emerald-500' : 'bg-gray-500',
+            questsStore.display_filter === 'active'
+              ? 'bg-emerald-500'
+              : 'bg-gray-500',
           ]"
           class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
         >
           Active
         </Button>
         <Button
-          @click="(display_filter = 'pending')"
+          @click="questsStore.display_filter = 'pending'"
           :class="[
-            display_filter === 'pending' ? 'bg-emerald-500' : 'bg-gray-500',
+            questsStore.display_filter === 'pending'
+              ? 'bg-emerald-500'
+              : 'bg-gray-500',
           ]"
           class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
         >
           Pending
         </Button>
         <Button
-          @click="(display_filter = 'completed')"
+          @click="questsStore.display_filter = 'completed'"
           :class="[
-            display_filter === 'completed' ? 'bg-emerald-500' : 'bg-gray-500',
+            questsStore.display_filter === 'completed'
+              ? 'bg-emerald-500'
+              : 'bg-gray-500',
           ]"
           class="text-white text-sm font-medium px-4 py-0 rounded-xl ml-1 h-8"
         >
@@ -52,7 +62,7 @@
 
       <Accordion value="null">
         <AccordionPanel
-          v-for="quest in quests_displayed"
+          v-for="quest in questsStore.quests_displayed"
           :key="quest.id"
           :value="quest.id"
         >
@@ -102,77 +112,19 @@ import AccordionPanel from 'primevue/accordionpanel'
 import AccordionHeader from 'primevue/accordionheader'
 import AccordionContent from 'primevue/accordioncontent'
 import Button from 'primevue/button'
-import { ref, computed } from 'vue'
 import { Camera, CameraResultType } from '@capacitor/camera'
+import { useQuestsStore } from '@/stores/quests'
 
 import honeycomb from '@/assets/honeycomb.png'
 const backgroundImage = `url(${honeycomb})`
 
-const quests = ref([
-  {
-    id: 1,
-    title: 'Find the Hidden Pond',
-    details:
-      "Explore the campus to discover the hidden pond near the science building. It's a peaceful spot, perfect for some quiet time.",
-    status: 'active',
-  },
-  {
-    id: 2,
-    title: 'Library Challenge',
-    details:
-      'Visit the library and find a book on your favorite subject. Take a picture of it and show it to the librarian to complete this quest.',
-    status: 'pending',
-  },
-  {
-    id: 3,
-    title: 'Campus Fitness Walk',
-    details:
-      'Walk around the entire campus and snap a selfie in front of the main statue. Share the picture in the group to earn points.',
-    status: 'completed',
-  },
-  {
-    id: 4,
-    title: "Professor's Secret",
-    details:
-      'Ask a professor about a topic they are passionate about, and write down the most interesting thing you learned. Share it with your classmates.',
-    status: 'active',
-  },
-  {
-    id: 5,
-    title: 'Art Gallery Hunt',
-    details:
-      'Find three pieces of art on campus that you find inspiring. Take a photo with each and add them to your quest report.',
-    status: 'active',
-  },
-  {
-    id: 6,
-    title: 'Community Service',
-    details:
-      'Volunteer at the community center for at least one hour. Snap a picture while helping out and share it with the group to complete the quest.',
-    status: 'active',
-  },
-])
-
-const display_filter = ref('all') // 0 - show all, 1 - show active, 2 - show completed, 3- show waiting_approval
+const questsStore = useQuestsStore()
 
 function send_quest(quest_id) {
   takePicture().then(image => {
-    quests.value = quests.value.map(e => {
-      if (e.id === quest_id) {
-        e.completed = true
-        e.image = image.webPath
-      }
-      return e
-    })
+    questsStore.submitQuest(quest_id, image)
   })
 }
-
-const quests_displayed = computed(() => {
-  if (display_filter.value === 'all') return quests.value
-  return quests.value.filter(e => {
-    return e.status === display_filter.value
-  })
-})
 
 const takePicture = async () => {
   const image = await Camera.getPhoto({
