@@ -12,7 +12,9 @@
     >
       <!-- Name and Settings Icons -->
       <div class="flex items-center justify-between">
-        <h1 class="text-white text-2xl">{{ profileData.name }}</h1>
+        <h1 class="text-white text-2xl">
+          {{ userProfileStore.profileData.name }}
+        </h1>
         <RouterLink to="/settings" class="flex items-center justify-end">
           <i class="pi-cog pi text-2xl text-white"></i>
         </RouterLink>
@@ -21,24 +23,24 @@
       <div class="flex items-center justify-between">
         <img
           class="w-24 aspect-square object-cover rounded-xl"
-          :src="profileData.profilePhoto"
+          :src="userProfileStore.profileData.profilePhoto"
         />
         <div class="w-full flex items-center justify-evenly">
           <div class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
-              {{ profileData.postCount }}
+              {{ userProfileStore.profileData.postCount }}
             </p>
             <p class="text-white text-s">Posts</p>
           </div>
           <RouterLink :to="`/friends`" class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
-              {{ profileData.friendCount }}
+              {{ userProfileStore.profileData.friendCount }}
             </p>
             <p class="text-white text-s">Friends</p>
           </RouterLink>
           <RouterLink :to="`/badges`" class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
-              {{ profileData.badgeCount }}
+              {{ userProfileStore.profileData.badgeCount }}
             </p>
             <p class="text-white text-s">Badges</p>
           </RouterLink>
@@ -50,7 +52,7 @@
       class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 gap-1"
     >
       <img
-        v-for="(post, index) in profileData.posts"
+        v-for="(post, index) in userProfileStore.profileData.posts"
         v-bind:key="index"
         :src="post.post_image"
       />
@@ -60,102 +62,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { useUserProfileStore } from '@/stores/userProfile'
 import { RouterLink } from 'vue-router'
 import MenuBar from '@/components/MenuBar.vue'
 
 import honeycomb from '@/assets/honeycomb.png'
-import imageFallback from '@/assets/image-fallback.jpg'
-
 const backgroundImage = `url(${honeycomb})`
 
-const profileData = ref({
-  name: 'Susan Clay',
-  postCount: 120,
-  friendCount: 120,
-  badgeCount: 120,
-  profilePhoto: imageFallback,
-  posts: [
-    {
-      post_id: 1,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 2,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 3,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 4,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 5,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 6,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 7,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 8,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 9,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 10,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 11,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 12,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 13,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 14,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 15,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 16,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 17,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 18,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 19,
-      post_image: imageFallback,
-    },
-    {
-      post_id: 20,
-      post_image: imageFallback,
-    },
-  ],
-})
+const userProfileStore = useUserProfileStore()
 </script>

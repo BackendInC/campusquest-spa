@@ -47,8 +47,20 @@ export const useQuestsStore = defineStore('quests', () => {
     },
   ])
 
+  async function fetchQuests() {
+    // TODO: Fetch quests from the server
+    // and update the quests ref
+    isLoading.value = true
+    isLoading.value = false
+  }
+
+  // A ref to track if the data is loading
+  const isLoading = ref(false)
+
+  // A ref to filter quests by status
   const display_filter = ref('all')
 
+  // Getter to display quests based on the filter
   const quests_displayed = computed(() => {
     if (display_filter.value === 'all') return quests.value
     return quests.value.filter(e => {
