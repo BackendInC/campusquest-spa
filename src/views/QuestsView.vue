@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full bg-white">
     <div
-      class="px-4 pt-20 pb-4 flex flex-col gap-4 bg-emerald-500 rounded-3xl mb-4"
+      class="px-4 pt-20 pb-4 flex flex-col gap-4 bg-emerald-500 rounded-3xl mb-2"
       :style="{
         backgroundImage: backgroundImage,
         backgroundBlendMode: 'luminosity',
