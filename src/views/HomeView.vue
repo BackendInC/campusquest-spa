@@ -2,15 +2,15 @@
   <Content title="Explore Feed" bgColor="#F0D269" titleColor="white">
     <div class="grid place-items-center">
       <SelectButton
-        v-model="feedSelector"
+        v-model="feedStore.feedSelector"
         :options="feedOptions"
         size="small"
-        :optionDisabled="option => option === feedSelector"
+        :optionDisabled="option => option === feedStore.feedSelector"
       />
     </div>
 
     <div class="grid gap-4">
-      <div v-for="(post, index) in posts" v-bind:key="index">
+      <div v-for="(post, index) in feedStore.posts" v-bind:key="index">
         <div class="flex items-center gap-2 ml-2 mb-2">
           <img :src="post.post_image" width="15%" class="rounded-full" />
           <div>
@@ -48,56 +48,11 @@ import SelectButton from 'primevue/selectbutton'
 import MenuBar from '@/components/MenuBar.vue'
 import Content from '@/components/Content.vue'
 
-import honeycomb from '@/assets/honeycomb.png'
-import imageFallBack from '@/assets/image-fallback.jpg'
+import { useFeedStore } from '@/stores/feed'
 
-const backgroundImage = `url(${honeycomb})`
+const feedStore = useFeedStore()
 
-const feedSelector = ref('All')
-const feedOptions = ref(['All', 'Friends'])
-
-const posts = ref([
-  {
-    post_id: 1,
-    post_image: imageFallBack,
-    post_username: 'Mert',
-    post_upvotes: 2,
-    post_downvotes: 2,
-    post_fullname: 'Mert Bozkurtlar',
-    quest_name: 'Quest Name',
-    post_description: 'This is a post description',
-  },
-  {
-    post_id: 2,
-    post_image: imageFallBack,
-    post_username: 'Gizem',
-    post_upvotes: 2,
-    post_downvotes: 2,
-    post_fullname: 'Gizem Aydin',
-    quest_name: 'Quest Name',
-    post_description: 'This is a great quest',
-  },
-  {
-    post_id: 3,
-    post_image: imageFallBack,
-    post_username: 'Mert',
-    post_upvotes: 2,
-    post_downvotes: 2,
-    post_fullname: 'Mert Bozkurtlar',
-    quest_name: 'Quest Name',
-    post_description: 'This is a post description',
-  },
-  {
-    post_id: 4,
-    post_image: imageFallBack,
-    post_username: 'Gizem',
-    post_upvotes: 2,
-    post_downvotes: 2,
-    post_fullname: 'Gizem Aydin',
-    quest_name: 'Quest Name',
-    post_description: 'This is a great quest',
-  },
-])
+const feedOptions = ref(['all', 'friends'])
 </script>
 
 <style>
