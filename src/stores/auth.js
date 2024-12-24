@@ -12,6 +12,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isLoggedIn = ref(false)
 
+  const isAdmin = ref(false)
+
   async function fetchUserData() {
     // TODO: Fetch user data from the server
   }
@@ -82,9 +84,14 @@ export const useAuthStore = defineStore('auth', () => {
     // TODO: Implement requestPasswordReset
   }
 
+  function updateUserBee(beeID) {
+    // TODO: Implement updateUserBee
+  }
+
   return {
     userData,
     isLoggedIn,
+    isAdmin,
     fetchUserData,
     register,
     login,
@@ -94,5 +101,6 @@ export const useAuthStore = defineStore('auth', () => {
     updatePassword,
     requestPasswordReset,
     validateEmail,
+    updateUserBee,
   }
 })
