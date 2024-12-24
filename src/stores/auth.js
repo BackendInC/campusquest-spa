@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useFetch } from '@vueuse/core'
 
 export const useAuthStore = defineStore('auth', () => {
   const userData = ref({
@@ -18,40 +19,59 @@ export const useAuthStore = defineStore('auth', () => {
     // TODO: Fetch user data from the server
   }
 
-  function register(name, email, password) {
+  async function register(username, email, password) {
     // TODO: Implement register
     // Simulate a registration request
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (name === '' || email === '' || password === '') {
-          reject(new Error('Please fill in all fields'))
-        } else {
-          userData.value.email = email
-          isLoggedIn.value = true
-          resolve({ name, email })
-        }
-      }, 1000)
-    })
+
+    console.log(import.meta.env.VITE_API_URL + '/users')
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/users',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+          date_of_birth: '1999-12-31',
+        }),
+      },
+    )
+
+    if (isFetching) {
+      console.log('Fetching...')
+    }
+
+    console.log('Data:', data)
   }
 
   function validateEmail(email) {
     // TODO: Implement email validation
   }
 
-  function login(email, password) {
+  async function login(email, password) {
     // TODO: Implement login
     // Simulate a login request
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email === '' || password === '') {
-          reject(new Error('Please fill in all fields'))
-        } else {
-          userData.value.email = email
-          isLoggedIn.value = true
-          resolve({ email })
-        }
-      }, 1000)
-    })
+    console.log(import.meta.env.VITE_API_URL)
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/users/login',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+        mode: 'no-cors',
+      },
+    )
+
+    if (isFetching) {
+      console.log('Fetching...')
+    }
+
+    console.log('Data:', data)
   }
 
   async function logout() {
