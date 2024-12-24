@@ -12,6 +12,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isLoggedIn = ref(false)
 
+  const isAdmin = ref(false)
+
   async function fetchUserData() {
     // TODO: Fetch user data from the server
   }
@@ -89,6 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     userData,
     isLoggedIn,
+    isAdmin,
     fetchUserData,
     register,
     login,
