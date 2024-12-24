@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
-  function logout() {
+  async function logout() {
     // TODO: Implement logout
     // Simulate a logout request
     return new Promise(resolve => {

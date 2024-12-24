@@ -38,6 +38,7 @@
         <p class="text-gray-700 text-lg">Change Email</p>
         <i class="pi-angle-right pi text-lg text-black"></i>
       </RouterLink>
+<<<<<<< Updated upstream
       <RouterLink to="/change-password" class="flex items-center justify-between">
         <p class="text-gray-700 text-lg">Change Password</p>
         <i class="pi-angle-right pi text-lg text-black"></i>
@@ -45,7 +46,53 @@
       <div class="flex items-center justify-between">
         <p class="text-gray-700 text-lg">Push Notifications</p>
         <ToggleSwitch v-model="checked" />
+=======
+
+      <div class="mx-1 mb-4 border-t-2 border-[#E2E1E1]"></div>
+      
+      <div class="text-[#ADADAD] ml-2 mb-3 text-xl">Account Settings</div>
+      
+      <div class="flex flex-col ml-2 mt-2 gap-4">
+        <RouterLink to="/edit-profile" class="flex items-center justify-between">
+          <p class="text-gray-700 text-lg">Edit Profile</p>
+          <i class="pi-angle-right pi text-lg text-black"></i>
+        </RouterLink>
+        <RouterLink to="/change-password" class="flex items-center justify-between">
+          <p class="text-gray-700 text-lg">Change Password</p>
+          <i class="pi-angle-right pi text-lg text-black"></i>
+        </RouterLink>
+        <div class="flex items-center justify-between">
+          <p class="text-gray-700 text-lg">Push Notifications</p>
+          <ToggleSwitch v-model="checked" />
+        </div>
       </div>
+
+      <div class="text-[#ADADAD] ml-2 mt-3 mb-3 text-xl">More</div>
+      
+      <div class="flex flex-col ml-2 mt-2 gap-4">
+        <RouterLink to="/about-us" class="flex items-center justify-between">
+          <p class="text-gray-700 text-lg">About Us</p>
+          <i class="pi-angle-right pi text-lg text-black"></i>
+        </RouterLink>
+        <RouterLink to="/privacy-policy" class="flex items-center justify-between">
+          <p class="text-gray-700 text-lg">Privacy Policy</p>
+          <i class="pi-angle-right pi text-lg text-black"></i>
+        </RouterLink>
+        <p @click="visible = true" class="text-red-700 text-lg">
+          Log Out
+        </p>
+>>>>>>> Stashed changes
+      </div>
+
+      <Dialog v-model:visible="visible" modal header="Log Out of Your Account" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+        <div class="flex flex-col gap-2">
+          <hr class="border-[#b2b1b1]" />
+          <button class="text-red-700 text-lg" @click="logOutAndRedirect"> Log Out </button>
+          <hr class="border-[#b2b1b1]" />
+          <button class="ext-black text-lg" @click="visible = false"> Cancel </button>
+        </div>
+      </Dialog>
+
     </div>
 
     <div class="text-[#ADADAD] ml-2 mt-3 mb-3 text-xl">More</div>
@@ -80,9 +127,15 @@
   <script setup>
     import { RouterLink } from 'vue-router'
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
     import ToggleSwitch from 'primevue/toggleswitch';
+<<<<<<< Updated upstream
     import { InputText } from 'primevue'
     import { Button } from 'primevue'
+=======
+    import Dialog from 'primevue/dialog';
+    import { useAuthStore } from '@/stores/auth'
+>>>>>>> Stashed changes
 
     import honeycomb from '@/assets/bw-honeycomb.png'
     import imageFallback from '@/assets/image-fallback.jpg'
@@ -94,6 +147,7 @@
     profilePhoto: imageFallback
     })
 
+<<<<<<< Updated upstream
     const nameBuffer = ref(null);
     const nameInputMode = ref(false);
 
@@ -108,7 +162,18 @@
       nameInputMode.value = false;
     }
     const visible = ref(false);
+=======
+    const router = useRouter();
+    const authStore = useAuthStore()
+    const logOutAndRedirect = async () => {
+      await authStore.logout();
+      console.log('aaaa');
+      router.push('/login'); 
+    };
+
+>>>>>>> Stashed changes
     const checked = ref(false);
+    const visible = ref(false);
 
   </script>
   
