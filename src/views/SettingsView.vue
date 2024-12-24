@@ -131,7 +131,6 @@
     const authStore = useAuthStore()
     const logOutAndRedirect = async () => {
       await authStore.logout();
-      console.log('aaaa');
       router.push('/login'); 
     };
 
