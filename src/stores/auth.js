@@ -82,6 +82,10 @@ export const useAuthStore = defineStore('auth', () => {
     // TODO: Implement requestPasswordReset
   }
 
+  function updateUserBee(beeID) {
+    // TODO: Implement updateUserBee
+  }
+
   return {
     userData,
     isLoggedIn,
@@ -94,5 +98,6 @@ export const useAuthStore = defineStore('auth', () => {
     updatePassword,
     requestPasswordReset,
     validateEmail,
+    updateUserBee,
   }
 })
