@@ -10,11 +10,20 @@
           </h2>
           <div class="flex flex-col gap-4">
             <div class="flex flex-col">
-              <label for="username">ITU E-Mail</label>
+              <label for="mail">ITU E-Mail</label>
+              <InputText
+                name="mail"
+                type="text"
+                placeholder="user@itu.edu.tr"
+                autocapitalize="none"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label for="username">Full Name</label>
               <InputText
                 name="username"
                 type="text"
-                placeholder="user@itu.edu.tr"
+                placeholder="Name Surname"
                 autocapitalize="none"
               />
             </div>
@@ -81,7 +90,9 @@ import { Button } from 'primevue'
 import { reactive } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 
@@ -117,15 +128,21 @@ const resolver = ({ values }) => {
   }
 }
 
-const onFormSubmit = ({ valid }) => {
-  if (valid) {
+const onFormSubmit = async e => {
+  if (e.valid) {
     toast.add({
       severity: 'success',
       summary: 'Form is submitted.',
       life: 3000,
     })
 
-    router.push({ name: 'email_check' })
+    await authStore.register(
+      e.states.username.value,
+      e.states.mail.value,
+      e.states.password.value,
+    )
+
+    // router.push({ name: 'email_check' })
   }
 }
 </script>
