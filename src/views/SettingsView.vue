@@ -73,7 +73,7 @@
       <hr class="border-[#b2b1b1]" />
       <button class="text-red-700 text-lg" @click="logOutAndRedirect"> Log Out </button>
       <hr class="border-[#b2b1b1]" />
-      <button class="ext-black text-lg" @click="visible = false"> Cancel </button>
+      <button class="text-black text-lg" @click="visible = false"> Cancel </button>
     </div>
   </Dialog>
 
@@ -269,35 +269,13 @@ const router = useRouter();
 
 const logOutAndRedirect = async () => {
   await authStore.logout();
-  console.log('aaaa');
   router.push('/login');
 };
 
 const checked = ref(false);
 const visible = ref(false);
 
-    const nameBuffer = ref(null);
-    const nameInputMode = ref(false);
-
-    function openEditName() {
-      nameBuffer.value = profileData.name;
-      nameBuffer.value = "d";
-      nameInputMode.value = true;
-    }
-    
-    function updateName() {
-      profileData.value.name = nameBuffer.value;
-      nameInputMode.value = false;
-    }
-    const router = useRouter();
-    const authStore = useAuthStore()
-    const logOutAndRedirect = async () => {
-      await authStore.logout();
-      router.push('/login'); 
-    };
-
-    const checked = ref(false);
-    const visible = ref(false);
+  
   
 
 if (authStore.userData.profilePhoto == '') {
