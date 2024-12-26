@@ -1,24 +1,29 @@
 <template>
-  <div class="w-full h-full bg-[#31556e]">
-    <!-- PROFILE SECTION -->
-    <div
-      class="px-4 pt-12 pb-4 flex flex-col gap-4"
-      :style="{
-        backgroundImage: backgroundImage,
-        backgroundBlendMode: 'luminosity',
-        backgroundPosition: 'center',
-        backgroundColor: '#31556e',
-      }"
+<div class="w-full h-full bg-[#31556e]">
+  <!-- PROFILE SECTION -->
+  <div
+    class="px-4 pt-12 pb-4 flex flex-col gap-4"
+    :style="{
+            backgroundImage: backgroundImage,
+            backgroundBlendMode: 'luminosity',
+            backgroundPosition: 'center',
+            backgroundColor: '#31556e',
+            }"
     >
-      <!-- Name and Settings Icons -->
-      <div class="flex items-center justify-between">
-        <h1 class="text-white text-2xl">
-          {{ userProfileStore.profileData.name }}
-        </h1>
-        <RouterLink to="/settings" class="flex items-center justify-end">
-          <i class="pi-cog pi text-2xl text-white"></i>
-        </RouterLink>
+    <!-- Name and Settings Icons -->
+    <div class="flex items-center justify-between">
+      <h1 class="text-white text-2xl">
+        {{ userProfileStore.profileData.name }}
+      </h1>
+      <div class="justify-end flex space-x-4">
+      <RouterLink to="/qr" class="flex">
+        <i class="pi-qrcode pi text-2xl text-white"></i>
+      </RouterLink>
+      <RouterLink to="/settings" class="flex items-center ">
+        <i class="pi-cog pi text-2xl text-white"></i>
+      </RouterLink>
       </div>
+    </div>
       <!-- Profile Photo and Stats -->
       <div class="flex items-center justify-between">
         <img

@@ -19,11 +19,11 @@ export const useFriendsStore = defineStore('friends', () => {
     // TODO: Fetch friends from the server
   }
 
-  async function removeFriend(userName) {
+  async function removeFriend(encryptedName) {
     // TODO: Implement this
   }
 
-  async function addFriend(userName) {
+  async function addFriend(encryptedName) {
     // TODO: implement this
   }
 
