@@ -16,6 +16,8 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       {
         post_id: 1,
         post_image: imageFallback,
+        content: "this is a pic",
+        quest_name: 'Quest Name',
       },
       {
         post_id: 2,

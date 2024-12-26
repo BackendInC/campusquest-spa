@@ -276,6 +276,30 @@ const logOutAndRedirect = async () => {
 const checked = ref(false);
 const visible = ref(false);
 
+    const nameBuffer = ref(null);
+    const nameInputMode = ref(false);
+
+    function openEditName() {
+      nameBuffer.value = profileData.name;
+      nameBuffer.value = "d";
+      nameInputMode.value = true;
+    }
+    
+    function updateName() {
+      profileData.value.name = nameBuffer.value;
+      nameInputMode.value = false;
+    }
+    const router = useRouter();
+    const authStore = useAuthStore()
+    const logOutAndRedirect = async () => {
+      await authStore.logout();
+      router.push('/login'); 
+    };
+
+    const checked = ref(false);
+    const visible = ref(false);
+  
+
 if (authStore.userData.profilePhoto == '') {
   authStore.userData.profilePhoto = '/src/assets/image-fallback.jpg';
 }

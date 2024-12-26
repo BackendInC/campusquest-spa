@@ -51,11 +51,12 @@
     <div
       class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 gap-1"
     >
-      <img
-        v-for="(post, index) in userProfileStore.profileData.posts"
-        v-bind:key="index"
-        :src="post.post_image"
-      />
+    <div v-for="(post, index) in userProfileStore.profileData.posts">
+      <RouterLink :to="`/post-${index}`">
+        <img v-bind:src="post.post_image">
+      </RouterLink>
+    </div>
+    
     </div>
   </div>
   <MenuBar />
