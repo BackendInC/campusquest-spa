@@ -19,17 +19,17 @@
       <div
       class="bg-white w-full h-full rounded-t-[2rem] py-3"
     >
-        <div class="flex items-center gap-2 mb-2 ml-2">
+        <div class="flex items-center gap-2 m-3">
           <img :src="userProfileStore.profileData.profilePhoto" width="15%" class="rounded-full" />
           <div>
-            <h1 class="font-bold">{{ userProfileStore.profileData.name }}</h1>
+            <h1 class="font-semibold">{{ userProfileStore.profileData.name }}</h1>
             <h2 class="text-xs font-light">{{ post.quest_name }}</h2>
           </div>
         </div>
     
         <hr class="border-gray-200 mb-3 mx-3" />
         <img :src="postImage" alt="Post Image" width="100%" class="mb-3" />
-        <div class="flex flex-col gap-2 ml-2">
+        <div class="flex flex-col ml-2">
           <div class="p-2 flex gap-3">
             <div class="flex items-center gap-1">
               <i class="pi pi-thumbs-up" style="font-size: 1.5rem" />
