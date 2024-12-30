@@ -19,11 +19,11 @@
               />
             </div>
             <div class="flex flex-col">
-              <label for="username">Full Name</label>
+              <label for="username">Username</label>
               <InputText
                 name="username"
                 type="text"
-                placeholder="Name Surname"
+                placeholder="user19"
                 autocapitalize="none"
               />
             </div>
@@ -68,7 +68,12 @@
               variant="simple"
               >{{ $form.password_confirm.error?.message }}</Message
             >
-            <Button type="submit" severity="primary" label="Register" />
+            <Button
+              type="submit"
+              severity="primary"
+              label="Register"
+              :loading="submitButtonLoading"
+            />
           </div>
         </div>
       </Form>
@@ -87,7 +92,7 @@ import { InputText } from 'primevue'
 import { Password } from 'primevue'
 import { Message } from 'primevue'
 import { Button } from 'primevue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
@@ -102,8 +107,14 @@ const initialValues = reactive({
   password_confirm: '',
 })
 
+const submitButtonLoading = ref(false)
+
 const resolver = ({ values }) => {
   const errors = {}
+
+  if (!values.mail) {
+    errors.mail = [{ message: 'Mail is required.' }]
+  }
 
   if (!values.username) {
     errors.username = [{ message: 'Username is required.' }]
@@ -129,6 +140,7 @@ const resolver = ({ values }) => {
 }
 
 const onFormSubmit = async e => {
+  submitButtonLoading.value = true
   if (e.valid) {
     toast.add({
       severity: 'success',
@@ -136,14 +148,24 @@ const onFormSubmit = async e => {
       life: 3000,
     })
 
-    await authStore.register(
+    const error = await authStore.register(
       e.states.username.value,
       e.states.mail.value,
       e.states.password.value,
     )
 
-    // router.push({ name: 'email_check' })
+    if (error.value) {
+      toast.add({
+        severity: 'error',
+        summary: 'Registration failed.',
+        detail: error.value,
+        life: 3000,
+      })
+    } else {
+      router.push({ name: 'email_check' })
+    }
   }
+  submitButtonLoading.value = false
 }
 </script>
 
