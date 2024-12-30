@@ -10,11 +10,11 @@
           </h2>
           <div class="flex flex-col gap-4">
             <div class="flex flex-col">
-              <label for="username">ITU E-Mail</label>
+              <label for="username">Username</label>
               <InputText
                 name="username"
                 type="text"
-                placeholder="user@itu.edu.tr"
+                placeholder="user19"
                 autocapitalize="none"
               />
             </div>
@@ -42,7 +42,12 @@
               variant="simple"
               >{{ $form.password.error?.message }}</Message
             >
-            <Button type="submit" severity="danger" label="Login" />
+            <Button
+              type="submit"
+              severity="danger"
+              label="Login"
+              :loading="submitButtonLoading"
+            />
           </div>
         </div>
       </Form>
@@ -61,12 +66,16 @@ import { InputText } from 'primevue'
 import { Password } from 'primevue'
 import { Message } from 'primevue'
 import { Button } from 'primevue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const toast = useToast()
+const authStore = useAuthStore()
+
+const submitButtonLoading = ref(false)
 
 const initialValues = reactive({
   username: '',
@@ -89,16 +98,32 @@ const resolver = ({ values }) => {
   }
 }
 
-const onFormSubmit = ({ valid }) => {
+const onFormSubmit = async ({ valid, states }) => {
+  submitButtonLoading.value = true
   if (valid) {
-    toast.add({
-      severity: 'success',
-      summary: 'Form is submitted.',
-      life: 3000,
-    })
+    const error = await authStore.login(
+      states.username.value,
+      states.password.value,
+    )
 
-    router.push({ name: 'home' })
+    if (error.value) {
+      if (error.value === 'User is not verified') {
+        // TODO: Currently, we don't have access to user_id from the login response.
+        router.push({ name: 'email-check' })
+      } else {
+        toast.add({
+          severity: 'error',
+          summary: 'Login failed.',
+          detail: error.value.message,
+          life: 3000,
+        })
+        submitButtonLoading.value = false
+      }
+    } else {
+      router.push({ name: 'home' })
+    }
   }
+  submitButtonLoading.value = false
 }
 </script>
 

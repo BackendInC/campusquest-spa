@@ -4,10 +4,11 @@ import { useFetch } from '@vueuse/core'
 
 export const useAuthStore = defineStore('auth', () => {
   const userData = ref({
-    id: 1,
-    name: 'Susan Clay',
-    email: 'clay@itu.edu.tr',
+    user_id: null,
+    username: null,
+    email: null,
     profilePhoto: '',
+    jwt: '',
   })
 
   const isLoggedIn = ref(false)
@@ -19,9 +20,6 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function register(username, email, password) {
-    // TODO: Implement register
-    // Simulate a registration request
-
     console.log(import.meta.env.VITE_API_URL + '/users')
     const { isFetching, error, data } = await useFetch(
       import.meta.env.VITE_API_URL + '/users',
@@ -39,38 +37,60 @@ export const useAuthStore = defineStore('auth', () => {
       },
     )
 
-    if (isFetching) {
-      console.log('Fetching...')
+    if (!error.value) {
+      const response = JSON.parse(data.value)
+      userData.value.user_id = response.id
     }
 
-    console.log('Data:', data)
+    return error
   }
 
-  function validateEmail(email) {
-    // TODO: Implement email validation
+  async function validateEmail(verificationCode) {
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/users/verify',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userData.value.user_id,
+          code: verificationCode,
+        }),
+      },
+    )
+
+    if (!error) {
+      const response = JSON.parse(data.value)
+    }
+
+    return error
   }
 
   async function login(email, password) {
-    // TODO: Implement login
     // Simulate a login request
     console.log(import.meta.env.VITE_API_URL)
     const { isFetching, error, data } = await useFetch(
       import.meta.env.VITE_API_URL + '/users/login',
       {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           username: email,
           password: password,
         }),
-        mode: 'no-cors',
       },
     )
 
-    if (isFetching) {
-      console.log('Fetching...')
+    if (!error) {
+      userData.value.jwt = data.value
+      userData.value.email = email
+      isLoggedIn.value = true
     }
 
-    console.log('Data:', data)
+    return error
   }
 
   async function logout() {
