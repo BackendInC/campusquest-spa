@@ -6,7 +6,7 @@
         style="padding: 0 2rem; width: 100%; height: auto; max-height: 60vh"
         level="H"
         :render-as="renderAs"
-        :value="authStore.userData.user_id"
+        :value="' '+authStore.userData.user_id+' '"
         :image-settings="imageSettings"
         foreground="#333"
         />
@@ -26,10 +26,10 @@
         <Button class="m-auto w-24" severity="info" @click="newfriend_visible = false"> Poggers </Button>
       </div>
     </Dialog>
-    <Dialog v-model:visible="friend_fail_visible" modal header="Invalid QR code"
+    <Dialog v-model:visible="friend_fail_visible" modal header="Failure"
             :style="{ width: '25rem' }">
       <div class="flex flex-col gap-2">
-        <p class="text-center">You scanned an invalid QR code</p>
+        <p class="text-center"> {{ failure_detail }}</p>
         <Button class="m-auto w-24" severity="danger" @click="friend_fail_visible = false"> Sorry </Button>
       </div>
     </Dialog>
@@ -59,14 +59,18 @@ const bees = useBees()
 
 const newfriend_visible = ref(false);
 const friend_fail_visible = ref(false);
-const friendBeeImage = ref(null); 
+const friendBeeImage = ref(bees.getBeeAvatar(4).image); 
 const friendName = ref(null); 
+const failure_detail = ref(null);
 
 const scan_qr = async () => {
-  const { result } = await QrScanner.scanQrCode();
-  const server_response = await friendsStore.addFriend(result);
+  const { qr_reading } = await QrScanner.scanQrCode()
+  // const qr_reading = ' 1 '
+  const result = qr_reading.trim()
+  const server_response = await friendsStore.addFriend(result)
+  console.log(server_response);
   friend_fail_visible.value = (server_response.error)
-  friendBeeImage.value = bees.getBeeAvatar(4).image
+  failure_detail.value = server_response.detail
   friendName.value = server_response.name
   newfriend_visible.value = (!server_response.error)
 }
@@ -78,8 +82,8 @@ const beeImage = bees.getBeeAvatar(beeID).image
 console.log(beeImage)
 const imageSettings = ref<ImageSettings>({
     src: beeImage,
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     excavate: false,
     })
 
