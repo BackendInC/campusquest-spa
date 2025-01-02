@@ -54,11 +54,12 @@ export const useAuthStore = defineStore('auth', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: userData.value.user_id,
+          username: userData.value.username,
           code: verificationCode,
         }),
       },
     )
+    console.log(data)
 
     if (!error) {
       const response = JSON.parse(data.value)
@@ -67,9 +68,8 @@ export const useAuthStore = defineStore('auth', () => {
     return error
   }
 
-  async function login(email, password) {
+  async function login(username, password) {
     // Simulate a login request
-    console.log(import.meta.env.VITE_API_URL)
     const { isFetching, error, data } = await useFetch(
       import.meta.env.VITE_API_URL + '/users/login',
       {
@@ -78,16 +78,21 @@ export const useAuthStore = defineStore('auth', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: email,
+          username: username,
           password: password,
         }),
       },
     )
+    console.log(data)
+    console.log(error)
 
     if (!error) {
       userData.value.jwt = data.value
-      userData.value.email = email
+      userData.value.username = username
       isLoggedIn.value = true
+    }
+    if (error.value === "Unauthorized"){
+      userData.value.username = username
     }
 
     return error

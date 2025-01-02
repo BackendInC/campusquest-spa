@@ -72,7 +72,7 @@ const onFormSubmit = async ({ valid, states }) => {
       life: 3000,
     })
 
-    const error = await authStore.validateEmail(states.verification.value)
+    const error = await authStore.validateEmail(Number(states.verification.value))
 
     if (error.value) {
       toast.add({

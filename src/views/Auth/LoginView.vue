@@ -107,9 +107,8 @@ const onFormSubmit = async ({ valid, states }) => {
     )
 
     if (error.value) {
-      if (error.value === 'User is not verified') {
-        // TODO: Currently, we don't have access to user_id from the login response.
-        router.push({ name: 'email-check' })
+      if (error.value === 'Unauthorized') {
+        router.push({ name: 'email_check' })
       } else {
         toast.add({
           severity: 'error',
