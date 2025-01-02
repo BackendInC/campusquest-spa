@@ -9,7 +9,7 @@
           <div class="flex flex-col gap-4">
             <div class="flex flex-col">
               <label for="verification">Verification Code</label>
-              <InputText name="verification" type="text" placeholder="" />
+              <InputText name="verification" type="number" placeholder="" />
             </div>
             <Message
               v-if="$form.verification?.invalid"
@@ -18,7 +18,12 @@
               variant="simple"
               >{{ $form.verification.error?.message }}</Message
             >
-            <Button type="submit" severity="danger" label="Enter" />
+            <Button
+              type="submit"
+              severity="danger"
+              label="Enter"
+              :loading="submitButtonLoading"
+            />
           </div>
         </div>
       </Form>
@@ -31,16 +36,20 @@ import { Form } from '@primevue/forms'
 import { InputText } from 'primevue'
 import { Message } from 'primevue'
 import { Button } from 'primevue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const toast = useToast()
+const authStore = useAuthStore()
 
 const initialValues = reactive({
   verification: '',
 })
+
+const submitButtonLoading = ref(false)
 
 const resolver = ({ values }) => {
   const errors = {}
@@ -54,7 +63,8 @@ const resolver = ({ values }) => {
   }
 }
 
-const onFormSubmit = ({ valid }) => {
+const onFormSubmit = async ({ valid, states }) => {
+  submitButtonLoading.value = true
   if (valid) {
     toast.add({
       severity: 'success',
@@ -62,8 +72,20 @@ const onFormSubmit = ({ valid }) => {
       life: 3000,
     })
 
-    router.push({ name: 'login' })
+    const error = await authStore.validateEmail(Number(states.verification.value))
+
+    if (error.value) {
+      toast.add({
+        severity: 'error',
+        summary: 'Verification failed.',
+        detail: error.value.message,
+        life: 3000,
+      })
+    } else {
+      router.push({ name: 'login' })
+    }
   }
+  submitButtonLoading.value = false
 }
 </script>
 
