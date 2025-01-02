@@ -28,7 +28,7 @@ export const useFriendsStore = defineStore('friends', () => {
         }
       )
       const response = JSON.parse(data.value)
-      friends[i].name = response.map((e) => e.username);
+      friends[i].name = response.username;
     }
   }
   
