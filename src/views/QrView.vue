@@ -6,7 +6,7 @@
         style="padding: 0 2rem; width: 100%; height: auto; max-height: 60vh"
         level="H"
         :render-as="renderAs"
-        :value="authStore.userData.encryptedName"
+        :value="authStore.userData.user_id"
         :image-settings="imageSettings"
         foreground="#333"
         />
@@ -65,25 +65,16 @@ const friendName = ref(null);
 const scan_qr = async () => {
   const { result } = await QrScanner.scanQrCode();
   const server_response = await friendsStore.addFriend(result);
-  friend_fail_visible.value = (result != 'susanclay')
+  friend_fail_visible.value = (server_response.error)
   friendBeeImage.value = bees.getBeeAvatar(4).image
-  friendName.value = 'Susan Clay'
-  newfriend_visible.value = (result == 'susanclay')
+  friendName.value = server_response.name
+  newfriend_visible.value = (!server_response.error)
 }
 
-//async function scan_qr() {
-//  const { camera } = await QrScanner.requestPermissions();
-//
-//  if (camera === "granted") {
-//    const { result } = await QrScanner.scanQrCode();
-//    alert(result);
-//  } else {
-//    alert("You should allow camera permission.");
-//  }
-//}
-
 const renderAs = ref<RenderAs>('svg');
-const beeImage = bees.getBeeAvatar(toRaw(authStore.userData).beeID).image
+let beeID = toRaw(authStore.userData).beeID
+if (!beeID) beeID = 1
+const beeImage = bees.getBeeAvatar(beeID).image
 console.log(beeImage)
 const imageSettings = ref<ImageSettings>({
     src: beeImage,
