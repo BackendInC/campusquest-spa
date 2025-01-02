@@ -49,6 +49,6 @@ import honeycomb from '@/assets/bw-honeycomb.png'
 import { useFriendsStore } from '@/stores/friends'
 
 const friendStore = useFriendsStore()
-
+await friendStore.fetchFriends();
 const friends = friendStore.friends
 </script>
