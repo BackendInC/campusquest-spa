@@ -20,18 +20,12 @@
       </div>
       <RouterLink :to="'/post-'+post.post_id" class="flex">
         <img :src="post.post_image" class="aspect-square" width="100%" />
-<<<<<<< Updated upstream
+      </RouterLink>
 
         <div class="p-2 flex gap-2">
-          <div class="flex items-center gap-1">
-            <i class="pi pi-thumbs-up" style="font-size: 1.5rem" />
-=======
-      </RouterLink>
-      
-      <div class="p-2 flex gap-2">
           <div @click="feedStore.upvotePost(post.post_id)" class="flex items-center gap-1">
             <i :class="[post.is_upvoted? 'pi-thumbs-up-fill' : 'pi-thumbs-up']" class="pi" style="font-size: 1.5rem" />
->>>>>>> Stashed changes
+
             <h1 class="font-bold text-lg">{{ post.post_upvotes }}</h1>
           </div>
           <div class="flex items-center gap-1">
