@@ -6,14 +6,15 @@
     }"
   >
     <div
-      class="px-4 pt-20 pb-4 flex flex-col gap-4"
+      class="px-4 pt-20 pb-4 flex gap-4 items-center"
       :style="{
         backgroundImage: backgroundImage,
         backgroundBlendMode: 'luminosity',
         backgroundPosition: 'center',
         backgroundColor: bgColor,
       }"
-    >
+      >
+      <RouterLink v-if="backroute != null" :to="backroute" class="pi pi-arrow-left text-white text-lg"></RouterLink>
       <h1
         :class="{
           'text-white': titleColor == 'white',
@@ -38,7 +39,7 @@ import { ref } from 'vue'
 import honeycomb from '@/assets/honeycomb.png'
 const backgroundImage = `url(${honeycomb})`
 
-const props = defineProps(['title', 'bgColor', 'titleColor'])
+const props = defineProps(['title', 'bgColor', 'titleColor', 'backroute'])
 </script>
 
 <style lang="scss" scoped></style>
