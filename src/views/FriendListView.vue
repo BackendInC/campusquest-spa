@@ -19,7 +19,7 @@
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10"
     >
       <div
-        v-for="friend in friends"
+        v-for="friend in friendStore.friends"
         :key="friend.id"
         class="flex items-center bg-white p-3 rounded-lg shadow justify-between"
       >
@@ -49,6 +49,5 @@ import honeycomb from '@/assets/bw-honeycomb.png'
 import { useFriendsStore } from '@/stores/friends'
 
 const friendStore = useFriendsStore()
-await friendStore.fetchFriends();
-const friends = friendStore.friends
+friendStore.fetchFriends()
 </script>

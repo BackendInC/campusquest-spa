@@ -3,11 +3,12 @@ import imageFallback from '@/assets/image-fallback.jpg'
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useFetch } from '@vueuse/core'
+import { computedAsync } from '@vueuse/core'
 
 const authStore = useAuthStore()
 
 export const useFriendsStore = defineStore('friends', () => {
-  let friends = [
+  let _friends = [
     { id: 1, name: 'Michael Scott', profile_picture: imageFallback },
     { id: 2, name: 'Jim Halpert', profile_picture: imageFallback },
     { id: 3, name: 'Pam Beesly', profile_picture: imageFallback },
@@ -15,60 +16,79 @@ export const useFriendsStore = defineStore('friends', () => {
     { id: 5, name: 'Angela Martin', profile_picture: imageFallback },
     { id: 6, name: 'Kevin Malone', profile_picture: imageFallback },
   ]
+  const forceRefresh = ref(0)
+  const friends = computedAsync(async () => {
+    forceRefresh.value
+    return await fetchFriends()
+  })
+
+  async function getFriendName(friend_id) {
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + `/users/${friend_id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.userData.jwt}`
+        }
+      }
+    )
+    const response = JSON.parse(data.value)
+    return response.username
+  }
 
   async function fillFriendsNames() {
-    for (i = 0; i < friends.length(); i++) {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/users/${friends[i].id}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      )
-      const response = JSON.parse(data.value)
-      friends[i].name = response.username;
+    for (let i = 0; i < _friends.length; i++) {
+      _friends[i].name = await getFriendName(_friends[i].id);
     }
   }
   
   async function fillFriendsPicture() {
-    for (i = 0; i < friends.length(); i++) {
+    for (let i = 0; i < _friends.length; i++) {
       const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/users/profile_picture/${friends[i].name}`,
+        import.meta.env.VITE_API_URL + `/users/profile_picture/${_friends[i].name}`,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.userData.jwt}`
           }
         }
       )
-      friends[i].profile_picture = data.value
+      if (error.value) {
+        _friends[i].profile_picture = imageFallback
+        console.log("Image not found", _friends[i].name)
+      } else {
+        _friends[i].profile_picture = data.value
+      }
     }
   }
   
   async function fetchFriends() {
-    friends = await (async () => {
+    _friends = await (async () => {
       const { isFetching, error, data } = await useFetch(
         import.meta.env.VITE_API_URL + `/friends`,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.userData.jwt}`
           }
         }
       )
       const response = JSON.parse(data.value)
-      const result = response.map((e) => {({
-        id: e.friend_id,
-        name: null,
-        profile_picture: null
-      })});
+      const result = response.map((e) => ({
+        id : e,
+        name : null,
+        profile_picture : null
+      }));
       return result
     })();
-    console.log(friends);
-    await fillFriendsNames();
-    await fillFriendsPicture();
+    await fillFriendsNames()
+    await fillFriendsPicture()
+    console.log(_friends)
+    console.log(friends)
+    return _friends
   }
 
   async function removeFriend(friend_id) {
@@ -78,30 +98,31 @@ export const useFriendsStore = defineStore('friends', () => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.userData.jwt}`
         }
       }
     )
     const response = JSON.parse(data.value)
+    forceRefresh.value++
     return response
   }
 
   async function addFriend(friend_id) {
     const { isFetching, error, data } = await useFetch(
-      import.meta.env.VITE_API_URL + `/friends`,
+      import.meta.env.VITE_API_URL + `/friends/${friend_id}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: authStore.userData.user_id,
-          friend_id: friend_id,
-          id: 0
-        }),
+          'Authorization': `Bearer ${authStore.userData.jwt}`
+        }
       }
     )
+    if (error.value) {
+      return {error: true, detail: error.value}      
+    } 
     const response = JSON.parse(data.value)
-    return response
+    return { error: false, name: await getFriendName(response.friend_id) }
   }
 
   return {
