@@ -28,6 +28,7 @@ export const useFeedStore = defineStore('feed', () => {
   const somepost = {
     post_id: 1,
     post_image: imageFallBack,
+    post_profile_image: imageFallBack,
     post_username: 'Basshunter',
     post_upvotes: 2,
     post_downvotes: 0,
@@ -97,9 +98,29 @@ export const useFeedStore = defineStore('feed', () => {
       return data.value === 'true'
     })()
 
+    const profile_image = await (async () => {
+      const { isFetching, error, data } = await useFetch(
+        import.meta.env.VITE_API_URL + `/users/profile_picture/${username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.userData.jwt}`
+          }
+        }
+      )
+      if (error.value) {
+        console.log("Image not found", _friends[i].name)
+        return imageFallback
+      } else {
+        return data.value
+      }
+    })()
+
     return {
       post_id: rawPost.id,
       post_image: import.meta.env.VITE_API_URL + rawPost.image_url,
+      post_profile_image: profile_image,
       post_username: username,
       post_upvotes: likes_count,
       post_downvotes: 0,
@@ -121,9 +142,12 @@ export const useFeedStore = defineStore('feed', () => {
           },
         },
       )
-      return JSON.parse(data.value)
+      let result = JSON.parse(data.value)
+      if (result.length > 0)
+        result.reverse()
+      return result
     })()
-
+    
     console.log(posts_parsed)
     posts.value = []
     for (const rawPost of posts_parsed) {
