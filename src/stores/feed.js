@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import imageFallBack from '@/assets/image-fallback.jpg'
 
 import { useFetch } from '@vueuse/core'
@@ -9,21 +9,18 @@ const authStore = useAuthStore()
 
 export const useFeedStore = defineStore('feed', () => {
   const feedSelector = ref('all') // all, friends
-  const forceRefresh = ref(false)
+  const forceRefresh = ref(0)
 
-  const posts = computedAsync(
-    async () => {
-      if (feedSelector.value === 'all' || forceRefresh.value) {
-        forceRefresh.value = false
-        return await fetchAllPosts()
-      } else {
-        forceRefresh.value = false
-        return await fetchFriendsPosts()
-      }
-    },
-    null,
-  )
+  const posts = ref([])
 
+  watch([feedSelector, forceRefresh], async (newval, oldval) => {
+    if (newval[0] === 'all') {
+      fetchPosts('/feed')
+    } else {
+      fetchPosts('/feed/friends')
+    }
+  }, { immediate: true })
+  
   const somepost = {
     post_id: 1,
     post_image: imageFallBack,
@@ -39,7 +36,7 @@ export const useFeedStore = defineStore('feed', () => {
   async function fillPostDetails(rawPost) {
     const likes_count = await (async () => {
       const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/posts/${p.id}/likes/count`,
+        import.meta.env.VITE_API_URL + `/posts/${rawPost.id}/likes/count`,
         {
           method: 'GET',
           headers: {
@@ -53,7 +50,7 @@ export const useFeedStore = defineStore('feed', () => {
 
     const username = await (async () => {
       const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/users/${p.user_id}`,
+        import.meta.env.VITE_API_URL + `/users/${rawPost.user_id}`,
         {
           method: 'GET',
           headers: {
@@ -65,9 +62,9 @@ export const useFeedStore = defineStore('feed', () => {
       return JSON.parse(data.value).username
     })();
 
-    const is_liked = await (async () => {
+    const quest_name = await (async () => {
       const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/posts/${p.id}/like`,
+        import.meta.env.VITE_API_URL + `/quests/${rawPost.quest_id}`,
         {
           method: 'GET',
           headers: {
@@ -76,177 +73,59 @@ export const useFeedStore = defineStore('feed', () => {
           }
         }
       )
-      return data.value === 'true'
-    })();
-    
-    return {
-      post_id: rawPost.id,
-      post_image: rawPost.image,
-      post_username: username,
-      post_upvotes: likes_count,
-      post_downvotes: 0,
-      post_username: username,
-      quest_name: 'Quest Name',
-      post_description: rawPost.caption,
-      is_upvoted: is_liked
-    };
-  }
-
-  async function fetchAllPosts() {
-    const posts_parsed = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + '/posts',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
-      )
-      return JSON.parse(data.value)
-    })();
-
-    let allPosts = []
-    
-    for (rawPost of posts_parsed) {
-      const cookedPost = fillPostDetails(rawPost);
-      allPosts.push(cookedPost); 
-    }
-  })
-
-
-  const somepost = {
-    post_id: 1,
-    post_image: imageFallBack,
-    post_username: 'Basshunter',
-    post_upvotes: 2,
-    post_downvotes: 0,
-    post_fullname: 'Basshunter',
-    quest_name: 'DotA',
-    post_description: 'Ni sitter i det dar Ventrilo och spelar DotA',
-    is_upvoted: true
-  }
-
-  async function fillPostDetails(rawPost) {
-    const likes_count = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/posts/${p.id}/likes/count`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      )
-      return data.value
-    })();
-
-    const username = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/users/${p.user_id}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      )
-      return JSON.parse(data.value).username
-    })();
-
-    const is_liked = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/posts/${p.id}/like`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      )
-      return data.value === 'true'
-    })();
-    
-    return {
-      post_id: rawPost.id,
-      post_image: rawPost.image,
-      post_username: username,
-      post_upvotes: likes_count,
-      post_downvotes: 0,
-      post_username: username,
-      quest_name: 'Quest Name',
-      post_description: rawPost.caption,
-      is_upvoted: is_liked
-    };
-  }
-
-  async function fetchAllPosts() {
-    const posts_parsed = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + '/posts',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      )
-      return JSON.parse(data.value)
-    })();
-
-    let allPosts = []
-    
-    for (rawPost of posts_parsed) {
-      const cookedPost = fillPostDetails(rawPost);
-      allPosts.push(cookedPost); 
-    }
-    allPosts.push(somepost);
-    console.log(allPosts)
-    return allPosts;
-  }
-
-  async function fetchFriendsPosts() {
-    const friends = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/friends`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
-      )
-      const response = JSON.parse(data.value)
-      const result = response.map((e) => e.friend_id);
-      return result
-    })();
-    
-    let friendsPost = []
-    for (friend_id of friends) {
-      const posts_parsed = await (async () => {
-        const { isFetching, error, data } = await useFetch(
-          import.meta.env.VITE_API_URL + `users/${friend_id}/posts/`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${authStore.userData.jwt}`
-            }
-          }
-        )
-        return JSON.parse(data.value)
-      })();
-      console.log(posts_parsed)
-
-      for (rawPost of posts_parsed) {
-        const cookedPost = fillPostDetails(rawPost)
-        friendsPost.push(cookedPost)
+      if (error.value) {
+        return 'Quest Name'
       }
+      return JSON.parse(data.value).name
+    })();
+
+    const is_liked = await (async () => {
+      const { isFetching, error, data } = await useFetch(
+        import.meta.env.VITE_API_URL + `/posts/${rawPost.id}/like`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.userData.jwt}`
+          }
+        }
+      )
+      return data.value === 'true'
+    })();
+
+    return {
+      post_id: rawPost.id,
+      post_image: import.meta.env.VITE_API_URL + rawPost.image_url,
+      post_username: username,
+      post_upvotes: likes_count,
+      post_downvotes: 0,
+      post_username: username,
+      quest_name: quest_name,
+      post_description: rawPost.caption,
+      is_upvoted: is_liked
     }
-    friendsPost.push(somepost)
-    return friendsPost
+  }
+
+  async function fetchPosts(url) {
+    const posts_parsed = await (async () => {
+      const { isFetching, error, data } = await useFetch(
+        import.meta.env.VITE_API_URL + url,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.userData.jwt}`
+          }
+        }
+      )
+      return JSON.parse(data.value)
+    })();
+
+    console.log(posts_parsed)
+    posts.value = []
+    for (const rawPost of posts_parsed) {
+      posts.value.push(await fillPostDetails(rawPost)); 
+    }
   }
 
   async function upvotePost(postId) {
@@ -260,7 +139,17 @@ export const useFeedStore = defineStore('feed', () => {
         }
       }
     )
-    forceRefresh.value = true
+    for (let i = 0; i < posts.value.length; i++) {
+      if (posts.value[i].post_id == postId) {
+        if (posts.value[i].is_upvoted) {
+          posts.value[i].is_upvoted = false
+          posts.value[i].post_upvotes--;
+        } else {
+          posts.value[i].is_upvoted = true
+          posts.value[i].post_upvotes++;
+        }
+      }
+    }
   }
 
   function downvotePost(postId) {

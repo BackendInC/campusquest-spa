@@ -53,7 +53,6 @@ import Content from '@/components/Content.vue'
 import { useFeedStore } from '@/stores/feed'
 
 const feedStore = useFeedStore()
-
 const feedOptions = ref(['all', 'friends'])
 </script>
 
