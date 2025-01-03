@@ -121,9 +121,12 @@ export const useFeedStore = defineStore('feed', () => {
           },
         },
       )
-      return JSON.parse(data.value)
+      let result = JSON.parse(data.value)
+      if (result.length > 0)
+        result.reverse()
+      return result
     })()
-
+    
     console.log(posts_parsed)
     posts.value = []
     for (const rawPost of posts_parsed) {
