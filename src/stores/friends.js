@@ -46,22 +46,7 @@ export const useFriendsStore = defineStore('friends', () => {
   
   async function fillFriendsPicture() {
     for (let i = 0; i < _friends.length; i++) {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/users/profile_picture/${_friends[i].name}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
-      )
-      if (error.value) {
-        _friends[i].profile_picture = imageFallback
-        console.log("Image not found", _friends[i].name)
-      } else {
-        _friends[i].profile_picture = data.value
-      }
+      _friends[i].profile_picture = `${authStore.api_url}/users/profile_picture/${_friends[i].name}`
     }
   }
   
