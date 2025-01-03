@@ -82,19 +82,15 @@ export const useAuthStore = defineStore('auth', () => {
           password: password,
         }),
       },
-    )
-    console.log(data)
-    console.log(error)
+    ).json();
 
-    if (!error) {
-      userData.value.jwt = data.value
-      userData.value.username = username
+    if (error !== null) {
+      userData.value.jwt = data.value.jwt_token
+      userData.value.user_id = data.value.user.id
+      userData.value.username = data.value.user.username
       isLoggedIn.value = true
     }
-    if (error.value === "Unauthorized"){
-      userData.value.username = username
-    }
-
+    
     return error
   }
 

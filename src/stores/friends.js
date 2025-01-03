@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import imageFallback from '@/assets/image-fallback.jpg'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useFetch } from '@vueuse/core'
 import { computedAsync } from '@vueuse/core'
@@ -17,10 +17,11 @@ export const useFriendsStore = defineStore('friends', () => {
     { id: 6, name: 'Kevin Malone', profile_picture: imageFallback },
   ]
   const forceRefresh = ref(0)
-  const friends = computedAsync(async () => {
-    forceRefresh.value
-    return await fetchFriends()
-  })
+  const friends = ref([])
+
+  watch(forceRefresh, async (newval, oldval) => {
+    fetchFriends();
+  }, { immediate: true })
 
   async function getFriendName(friend_id) {
     const { isFetching, error, data } = await useFetch(
@@ -86,9 +87,8 @@ export const useFriendsStore = defineStore('friends', () => {
     })();
     await fillFriendsNames()
     await fillFriendsPicture()
-    console.log(_friends)
+    friends.value = _friends
     console.log(friends)
-    return _friends
   }
 
   async function removeFriend(friend_id) {

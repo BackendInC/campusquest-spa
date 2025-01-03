@@ -1,109 +1,85 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useFetch } from '@vueuse/core'
 import imageFallback from '@/assets/image-fallback.jpg'
+import { useAuthStore } from '@/stores/auth'
 
-// IMPORTANT: This is a store to hold data for the user profile page
-// The purpose is not to current user data, but to display the profile of any user
-// If you are looking for a store to manage the current user data, check the auth.js store
+
 export const useUserProfileStore = defineStore('userProfile', () => {
   const profileData = ref({
-    name: 'Susan Clay',
-    postCount: 120,
-    friendCount: 120,
-    badgeCount: 120,
+    name: 'Name Surname',
+    postCount: 0,
+    friendCount: 0,
+    badgeCount: 0,
     profilePhoto: imageFallback,
-    posts: [
-      {
-        post_id: 1,
-        post_image: imageFallback,
-        content: "this is a pic",
-        quest_name: 'Quest Name',
-      },
-      {
-        post_id: 2,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 3,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 4,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 5,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 6,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 7,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 8,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 9,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 10,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 11,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 12,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 13,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 14,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 15,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 16,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 17,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 18,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 19,
-        post_image: imageFallback,
-      },
-      {
-        post_id: 20,
-        post_image: imageFallback,
-      },
-    ],
+    posts: [],
   })
 
-  function fetchUserProfile(userName) {
-    // TODO: Implement this function
-    // Fetch user profile data from the server
-    // and update the profileData ref
-    return userName
+  async function fetchPosts() {
+    const authStore = useAuthStore();
+
+    try {
+      const { data, error } = await useFetch(import.meta.env.VITE_API_URL + '/posts', {
+        headers: {
+          Authorization: `Bearer ${authStore.userData.jwt}`
+        }
+      }).json()
+
+      if (error.value) {
+        console.error('Error fetching posts:', error.value)
+        return
+      }
+
+      profileData.value.posts = data.value.map(post => ({
+        post_id: post.id,
+        post_image: post.image,
+        content: post.caption,
+      })) || []
+      profileData.value.postCount = data.value.length || 0
+    } catch (err) {
+      console.error('An error occurred while fetching posts:', err)
+    }
   }
 
-  return { profileData, fetchUserProfile }
+  async function fetchFriends() {
+    try {
+      const { data, error } = await useFetch(import.meta.env.VITE_API_URL + '/friends').json()
+
+      if (error.value) {
+        console.error('Error fetching friends:', error.value)
+        return
+      }
+
+      profileData.value.friendCount = data.value.length || 0
+    } catch (err) {
+      console.error('An error occurred while fetching friends:', err)
+    }
+  }
+
+  async function fetchBadges() {
+    try {
+      const { data, error } = await useFetch(import.meta.env.VITE_API_URL + '/achievements').json()
+
+      if (error.value) {
+        console.error('Error fetching badges:', error.value)
+        return
+      }
+
+      profileData.value.badgeCount = data.value.length || 0
+    } catch (err) {
+      console.error('An error occurred while fetching badges:', err)
+    }
+  }
+
+  async function fetchUserProfile() {
+    await Promise.all([fetchPosts(), fetchFriends(), fetchBadges()])
+  }
+
+  return {
+    profileData,
+    fetchPosts,
+    fetchFriends,
+    fetchBadges,
+    fetchUserProfile,
+  }
 })

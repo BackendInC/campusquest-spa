@@ -40,6 +40,16 @@ const router = createRouter({
       component: () => import('../views/ProfileView.vue'),
     },
     {
+      path: '/profile-:index',
+      name: 'profile-friend',
+      component: () => import('../views/Profile.vue'),
+    },
+    {
+      path: '/post/:postId',
+      name: 'Post',
+      component: () => import('../views/PostView.vue'),
+    },
+    {
       path: '/post-:index', 
       name: 'PostDetail',
       component: () => import('../views/PostDetailView.vue'),

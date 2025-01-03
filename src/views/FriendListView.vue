@@ -24,12 +24,18 @@
         class="flex items-center bg-white p-3 rounded-lg shadow justify-between"
       >
         <div class="flex items-center">
+          <RouterLink :to="`/profile-${friend.name}`">
+          <!-- Uncomment these lines once the backend provides "profile_picture" and "name" fields -->
+          <!-- 
           <img
             :src="friend.profile_picture"
             alt="Profile Picture"
             class="w-12 h-12 rounded-full object-cover"
           />
           <p class="ml-4 text-black">{{ friend.name }}</p>
+          -->
+          <p class="ml-4 text-black">Friend ID: {{ friend.id }}</p>
+        </RouterLink>
         </div>
         <button
           @click="friendStore.removeFriend(friend.id)"

@@ -13,7 +13,7 @@
     <!-- Name and Settings Icons -->
     <div class="flex items-center justify-between">
       <h1 class="text-white text-2xl">
-        {{ userProfileStore.profileData.name }}
+        {{ profile?.username }}
       </h1>
       <div class="justify-end flex space-x-4">
       <RouterLink to="/qr" class="flex">
@@ -28,24 +28,24 @@
       <div class="flex items-center justify-between">
         <img
           class="w-24 aspect-square object-cover rounded-xl"
-          :src="userProfileStore.profileData.profilePhoto"
+          :src="profileImageSrc"
         />
         <div class="w-full flex items-center justify-evenly">
           <div class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
-              {{ userProfileStore.profileData.postCount }}
+              {{ profile?.numPosts }}
             </p>
             <p class="text-white text-s">Posts</p>
           </div>
           <RouterLink :to="`/friends`" class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
-              {{ userProfileStore.profileData.friendCount }}
+              {{ profile?.numFriends }}
             </p>
             <p class="text-white text-s">Friends</p>
           </RouterLink>
           <RouterLink :to="`/badges`" class="flex flex-col items-center">
             <p class="text-white text-xl font-semibold">
-              {{ userProfileStore.profileData.badgeCount }}
+              {{ profile?.numAchievements }}
             </p>
             <p class="text-white text-s">Badges</p>
           </RouterLink>
@@ -54,26 +54,43 @@
     </div>
     <!-- POSTS SECTION -->
     <div
-      class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 gap-1"
+      class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 h-full gap-1 content-start"
     >
-    <div v-for="(post, index) in userProfileStore.profileData.posts">
-      <RouterLink :to="`/post-${index}`">
-        <img v-bind:src="post.post_image">
-      </RouterLink>
+      <div v-for="(post, index) in profile?.posts" :key="post.post_id" class="w-full aspect-square object-cover overflow-hidden">
+        <RouterLink :to="`/post-${index}`" class="w-full h-full">
+          <img :src="`${backendBaseurl}${post.image_url}`" alt="Post Image" class="w-full h-full"/>
+        </RouterLink>
+      </div>
     </div>
     
-    </div>
   </div>
   <MenuBar />
 </template>
 
 <script setup>
-import { useUserProfileStore } from '@/stores/userProfile'
+import { onMounted, computed } from 'vue'
+import { useProfilesStore } from '@/stores/profile'
 import { RouterLink } from 'vue-router'
 import MenuBar from '@/components/MenuBar.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore();
 
 import honeycomb from '@/assets/honeycomb.png'
 const backgroundImage = `url(${honeycomb})`
 
-const userProfileStore = useUserProfileStore()
+const userProfileStore = useProfilesStore()
+
+const profile = computed(() => userProfileStore.profiles[authStore.userData.user_id]);
+
+const backendBaseurl = computed(() => import.meta.env.VITE_API_URL);
+
+const profileImageSrc = computed(() => `${backendBaseurl.value}users/profile_picture/${authStore.userData.username}`);
+
+
+
+onMounted(() => {
+  userProfileStore.fetchProfile(authStore.userData.user_id)
+})
 </script>
+
