@@ -76,6 +76,16 @@ const router = createRouter({
       component: () => import('../views/CustomizationView.vue'),
     },
     {
+      path: '/about-us',
+      name: 'about-us',
+      component: () => import('../views/AboutUsView.vue'),
+    },
+    {
+      path: '/privacy-policy',
+      name: 'privacy-policy',
+      component: () => import('../views/PrivacyPolicyView.vue'),
+    },
+    {
       path: '/quest_create',
       name: 'quest_create',
       component: () => import('../views/QuestCreate.vue'),
