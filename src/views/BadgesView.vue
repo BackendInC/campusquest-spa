@@ -24,7 +24,6 @@
 
     <div class="relative z-10 mt-4">
       <ul class="space-y-4">
-        <div></div>
         <li
           v-for="achievement in achievements"
           :key="achievement.id"
@@ -50,9 +49,14 @@
 import honeycomb from '@/assets/honeycomb.png'
 const backgroundImage = `url(${honeycomb})`
 
+import { onMounted } from 'vue'
 import { useBadgeStore } from '@/stores/badge'
 
 const badgeStore = useBadgeStore()
+
+onMounted(() => {
+  badgeStore.fetchBadges()
+})
 
 const achievements = badgeStore.achievements
 </script>

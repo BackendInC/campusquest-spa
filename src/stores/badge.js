@@ -1,36 +1,35 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useFetch } from '@vueuse/core'
 
 export const useBadgeStore = defineStore('badge', () => {
-  const achievements = ref([
-    {
-      id: 1,
-      description: 'Description 1',
-      award_tokens: 50,
-    },
-    {
-      id: 2,
-      description: 'Description 2',
-      award_tokens: 100,
-    },
-    {
-      id: 3,
-      description: 'Description 3',
-      award_tokens: 75,
-    },
-    {
-      id: 4,
-      description: 'Description 4',
-      award_tokens: 150,
-    },
-  ])
+  const achievements = ref([])
 
-  async function fetchAchievements() {
-    // TODO: Fetch achievements from the server
+  async function fetchBadges() {
+    try {
+      const { data, error } = await useFetch(import.meta.env.VITE_API_URL + '/achievements').json()
+
+      if (error.value) {
+        console.error(error)
+        return
+      }
+
+      achievements.value = data.value || []
+    } catch (err) {
+      console.error('An error occurred while fetching badges:', err)
+    }
   }
+
+  //  if (achievements.value.length === 0) {
+  //   achievements.value.push({
+  //     description: "test",
+  //     award_tokens: 10,
+  //     id: 1
+  //   })
+  // }
 
   return {
     achievements,
-    fetchAchievements,
+    fetchBadges,
   }
 })
