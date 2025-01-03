@@ -98,24 +98,7 @@ export const useFeedStore = defineStore('feed', () => {
       return data.value === 'true'
     })()
 
-    const profile_image = await (async () => {
-      const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/users/profile_picture/${username}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
-      )
-      if (error.value) {
-        console.log("Image not found", _friends[i].name)
-        return imageFallback
-      } else {
-        return data.value
-      }
-    })()
+    const profile_image = import.meta.env.VITE_API_URL + `/users/profile_picture/${username}`
 
     return {
       post_id: rawPost.id,

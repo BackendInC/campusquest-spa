@@ -14,7 +14,7 @@
       <div class="grid gap-4">
         <div v-for="(post, index) in feedStore.posts" v-bind:key="index">
           <div class="flex items-center gap-2 ml-2 mb-2">
-            <img :src="post.post_image" width="15%" class="rounded-full" />
+            <img :src="post.post_profile_image" width="15%" class="rounded-full" />
             <div>
               <h1 class="font-bold">{{ post.post_username }}</h1>
               <h2 class="text-xs font-light">{{ post.quest_name }}</h2>
