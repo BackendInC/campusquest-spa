@@ -14,6 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
 
   const isAdmin = ref(false)
+  const api_url = ref(import.meta.env.VITE_API_URL)
 
   async function fetchUserData() {
     // TODO: Fetch user data from the server
@@ -148,5 +149,6 @@ export const useAuthStore = defineStore('auth', () => {
     requestPasswordReset,
     validateEmail,
     updateUserBee,
+    api_url
   }
 })
