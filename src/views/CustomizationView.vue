@@ -7,6 +7,7 @@
         backgroundBlendMode: 'luminosity',
         backgroundPosition: 'center',
         backgroundColor: '#7e94a2',
+        backgroundSize: '150%',
       }"
     >
       <div class="flex justify-center relative">
@@ -56,12 +57,12 @@
     </div>
   </div>
   <div
-    class="absolute flex justify-between align-center w-full top-0 left-0 p-5"
+    class="absolute flex justify-between align-center w-full top-0 mt-10 left-0 p-5"
   >
     <RouterLink to="/settings">
-      <i class="pi-arrow-left pi text-2xl text-white"></i>
+      <i class="pi-arrow-left pi text-xl text-white"></i>
     </RouterLink>
-    <p class="bg-gray-100 text-black py-1 px-3 rounded-lg">Save</p>
+    <p class="bg-gray-100 text-gray-800 py-1.5 px-4 rounded-lg">Save</p>
   </div>
 </template>
 
