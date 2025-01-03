@@ -13,14 +13,18 @@ export const useFeedStore = defineStore('feed', () => {
 
   const posts = ref([])
 
-  watch([feedSelector, forceRefresh], async (newval, oldval) => {
-    if (newval[0] === 'all') {
-      fetchPosts('/feed')
-    } else {
-      fetchPosts('/feed/friends')
-    }
-  }, { immediate: true })
-  
+  watch(
+    [feedSelector, forceRefresh],
+    async (newval, oldval) => {
+      if (newval[0] === 'all') {
+        fetchPosts('/feed')
+      } else {
+        fetchPosts('/feed/friends')
+      }
+    },
+    { immediate: true },
+  )
+
   const somepost = {
     post_id: 1,
     post_image: imageFallBack,
@@ -30,7 +34,7 @@ export const useFeedStore = defineStore('feed', () => {
     post_fullname: 'Basshunter',
     quest_name: 'DotA',
     post_description: 'Ni sitter i det dar Ventrilo och spelar DotA',
-    is_upvoted: true
+    is_upvoted: true,
   }
 
   async function fillPostDetails(rawPost) {
@@ -41,12 +45,12 @@ export const useFeedStore = defineStore('feed', () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
+            Authorization: `Bearer ${authStore.userData.jwt}`,
+          },
+        },
       )
       return data.value
-    })();
+    })()
 
     const username = await (async () => {
       const { isFetching, error, data } = await useFetch(
@@ -55,12 +59,12 @@ export const useFeedStore = defineStore('feed', () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
+            Authorization: `Bearer ${authStore.userData.jwt}`,
+          },
+        },
       )
       return JSON.parse(data.value).username
-    })();
+    })()
 
     const quest_name = await (async () => {
       const { isFetching, error, data } = await useFetch(
@@ -69,15 +73,15 @@ export const useFeedStore = defineStore('feed', () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
+            Authorization: `Bearer ${authStore.userData.jwt}`,
+          },
+        },
       )
       if (error.value) {
         return 'Quest Name'
       }
       return JSON.parse(data.value).name
-    })();
+    })()
 
     const is_liked = await (async () => {
       const { isFetching, error, data } = await useFetch(
@@ -86,12 +90,12 @@ export const useFeedStore = defineStore('feed', () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
+            Authorization: `Bearer ${authStore.userData.jwt}`,
+          },
+        },
       )
       return data.value === 'true'
-    })();
+    })()
 
     return {
       post_id: rawPost.id,
@@ -99,10 +103,9 @@ export const useFeedStore = defineStore('feed', () => {
       post_username: username,
       post_upvotes: likes_count,
       post_downvotes: 0,
-      post_username: username,
       quest_name: quest_name,
       post_description: rawPost.caption,
-      is_upvoted: is_liked
+      is_upvoted: is_liked,
     }
   }
 
@@ -114,17 +117,17 @@ export const useFeedStore = defineStore('feed', () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.userData.jwt}`
-          }
-        }
+            Authorization: `Bearer ${authStore.userData.jwt}`,
+          },
+        },
       )
       return JSON.parse(data.value)
-    })();
+    })()
 
     console.log(posts_parsed)
     posts.value = []
     for (const rawPost of posts_parsed) {
-      posts.value.push(await fillPostDetails(rawPost)); 
+      posts.value.push(await fillPostDetails(rawPost))
     }
   }
 
@@ -135,18 +138,18 @@ export const useFeedStore = defineStore('feed', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authStore.userData.jwt}`
-        }
-      }
+          Authorization: `Bearer ${authStore.userData.jwt}`,
+        },
+      },
     )
     for (let i = 0; i < posts.value.length; i++) {
       if (posts.value[i].post_id == postId) {
         if (posts.value[i].is_upvoted) {
           posts.value[i].is_upvoted = false
-          posts.value[i].post_upvotes--;
+          posts.value[i].post_upvotes--
         } else {
           posts.value[i].is_upvoted = true
-          posts.value[i].post_upvotes++;
+          posts.value[i].post_upvotes++
         }
       }
     }
