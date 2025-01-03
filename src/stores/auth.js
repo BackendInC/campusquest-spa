@@ -69,6 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
     return error
   }
 
+  
   async function login(username, password) {
     // Simulate a login request
     const { isFetching, error, data } = await useFetch(
@@ -88,10 +89,12 @@ export const useAuthStore = defineStore('auth', () => {
     console.log(error.value)
     if (error.value === null) {
       const jsonify = JSON.parse(data.value)
-      console.log(jsonify)
+
       userData.value.jwt = jsonify.jwt_token
       userData.value.user_id = jsonify.user.id
       userData.value.username = jsonify.user.username
+      userData.value.profilePhoto = import.meta.env.VITE_API_URL + `/users/profile_picture/${userData.value.username}`
+      console.log(userData.value)
       isLoggedIn.value = true
     }
     if (error.value === 'Unauthorized') {
