@@ -79,7 +79,10 @@
 
   <Dialog v-model:visible="imageInputMode" modal header="Change profile picture" :style="{ width: '50rem' }">
     <div class="flex items-center gap-4 mb-4">
-      <FileUpload ref="imageUploadRef" mode="basic" name="image[]" url="/user/profile_picture/upload" accept="image/*" :maxFileSize="1000000"
+      <FileUpload ref="imageUploadRef" mode="basic" name="profile_picture"
+        :url="authStore.api_url+'/users/profile_picture/upload'"
+        accept="image/*" :maxFileSize="1000000"
+        @before-send="beforeUpload"
         @upload="onImageUpload" />
     </div>
     <div class="flex justify-end gap-2">
@@ -185,6 +188,12 @@ const updateImage = () => {
     imageUploadRef.value.upload();
     imageInputMode.value = false;
 };
+
+function beforeUpload(request) {
+  console.log(request);
+  request.xhr.setRequestHeader('Authorization', `Bearer ${authStore.userData.jwt}`);
+  return request;
+}
 
 const onImageUpload = () => {
     toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });

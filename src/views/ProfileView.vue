@@ -86,15 +86,12 @@ const profile = computed(() => userProfileStore.profiles[authStore.userData.user
 
 const backendBaseurl = computed(() => import.meta.env.VITE_API_URL);
 
-const profileImageSrc = computed(() => {
-  const baseUrl = backendBaseurl.value;
-  const profilePicUrl = `${baseUrl}users/profile_picture/${authStore.userData.username}`;
-
-  return profile?.hasProfilePicture ? profilePicUrl : fallbackImageUrl;
-});
+const profileImageSrc = computed(() => `${backendBaseurl.value}/users/profile_picture/${authStore.userData.username}`);
 
 onMounted(() => {
+  console.log(authStore.userData.user_id)
   userProfileStore.fetchProfile(authStore.userData.user_id)
+
 })
 </script>
 
