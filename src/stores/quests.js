@@ -30,6 +30,29 @@ import { useFetch } from '@vueuse/core'
 export const useQuestsStore = defineStore('quests', () => {
   const quests = ref([])
 
+  async function createQuest(_name, _description, _image) {
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/quests',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: _name,
+          description: _description,
+          location_long: 0,
+          location_lat: 0,
+          points: 0,
+          start_date: "2025-01-04",
+          end_date: "2025-01-04",
+          image: _image
+        })
+      },
+    )
+    return error.value
+  }
+  
   async function fetchQuests(jwt) {
     // TODO: Fetch quests from the server
     // and update the quests ref
@@ -101,5 +124,5 @@ export const useQuestsStore = defineStore('quests', () => {
     return new Blob([ia], { type: mimeString })
   }
 
-  return { quests, display_filter, quests_displayed, fetchQuests, submitQuest }
+  return { quests, display_filter, quests_displayed, fetchQuests, submitQuest, createQuest }
 })
