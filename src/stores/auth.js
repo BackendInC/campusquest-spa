@@ -1,20 +1,20 @@
 import { defineStore } from 'pinia'
 import { useFetch } from '@vueuse/core'
-import { useStorage } from "@vueuse/core";
-import {ref} from 'vue';
+import { useStorage } from '@vueuse/core'
+import { ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
-  const userData = useStorage("userData", {
+  const userData = useStorage('userData', {
     user_id: null,
     username: null,
     email: null,
     profilePhoto: '',
     jwt: '',
-  });
+  })
 
-  const isLoggedIn = useStorage("isLoggedIn", false)
+  const isLoggedIn = useStorage('isLoggedIn', false)
 
-  const isAdmin = useStorage("isAdmin", false)
+  const isAdmin = useStorage('isAdmin', false)
   const api_url = ref(import.meta.env.VITE_API_URL)
 
   async function fetchUserData() {
@@ -38,6 +38,9 @@ export const useAuthStore = defineStore('auth', () => {
         }),
       },
     )
+
+    userData.value.username = username
+    userData.value.email = email
 
     if (!error.value) {
       const response = JSON.parse(data.value)
@@ -70,7 +73,6 @@ export const useAuthStore = defineStore('auth', () => {
     return error
   }
 
-  
   async function login(username, password) {
     // Simulate a login request
     const { isFetching, error, data } = await useFetch(
@@ -94,7 +96,9 @@ export const useAuthStore = defineStore('auth', () => {
       userData.value.jwt = jsonify.jwt_token
       userData.value.user_id = jsonify.user.id
       userData.value.username = jsonify.user.username
-      userData.value.profilePhoto = import.meta.env.VITE_API_URL + `/users/profile_picture/${userData.value.username}`
+      userData.value.profilePhoto =
+        import.meta.env.VITE_API_URL +
+        `/users/profile_picture/${userData.value.username}`
       console.log(userData.value)
       isLoggedIn.value = true
     }
@@ -112,9 +116,9 @@ export const useAuthStore = defineStore('auth', () => {
       email: null,
       profilePhoto: '',
       jwt: '',
-    };
-    isLoggedIn.value = false;
-    isAdmin.value = false;
+    }
+    isLoggedIn.value = false
+    isAdmin.value = false
   }
 
   function updateUserName(newName) {
@@ -153,6 +157,6 @@ export const useAuthStore = defineStore('auth', () => {
     requestPasswordReset,
     validateEmail,
     updateUserBee,
-    api_url
+    api_url,
   }
 })
