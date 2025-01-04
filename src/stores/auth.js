@@ -121,9 +121,21 @@ export const useAuthStore = defineStore('auth', () => {
     isAdmin.value = false
   }
 
-  function updateUserName(newName) {
+  async function updateUserName(newName) {
     // TODO: Implement updateUserName
-    userData.value.name = newName
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/users/update/username',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userData.value.jwt}`,
+        },
+        body: JSON.stringify({
+          username: newName,
+        }),
+      },
+    )
   }
 
   function updateProfilePhoto(newPhoto) {
