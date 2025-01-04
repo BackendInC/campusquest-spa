@@ -2,7 +2,7 @@
     <div class="w-full h-full bg-[#31556e]">
       <!-- PROFILE SECTION -->
       <div
-        class="px-4 pt-12 pb-4 flex flex-col gap-4"
+        class="px-4 pt-12 pb-4 flex flex-col items-start gap-4"
         :style="{
           backgroundImage: backgroundImage,
           backgroundBlendMode: 'luminosity',
@@ -20,7 +20,7 @@
         </div>
   
         <!-- Profile Photo and Stats -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between self-stretch">
           <img
             class="w-24 aspect-square object-cover rounded-xl"
             :src="profile?.profilePhoto || imageFallback"
@@ -43,7 +43,7 @@
               <p class="text-white text-xl font-semibold">
                 {{ profile?.numAchievements || 0 }}
               </p>
-              <p class="text-white text-s">Achievements</p>
+              <p class="text-white text-s">Badges</p>
             </div>
           </div>
         </div>
@@ -51,20 +51,20 @@
   
       <!-- POSTS SECTION -->
       <div
-        class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 h-full gap-1"
+      class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 h-full gap-1 content-start"
       >
         <p v-if="!profile?.posts?.length" class="col-span-3 text-center">
           No posts available
         </p>
         <div
           v-for="post in profile?.posts || []"
-          :key="post.post_id"
-          class="flex justify-center items-center"
+          :key="post.id"
+          class="w-full aspect-square object-cover overflow-hidden"
         >
-            <RouterLink :to="`/post-${post.post_id}`">
+            <RouterLink :to="`/post-${post.id}`" class="w-full h-full">
             <img
-              class="w-full h-24 bg-gray-300 object-cover rounded-md"
-              :src="post.post_image || imageFallback"  
+              class="w-full h-full rounded-md"
+              :src="`${backendBaseurl}${post.image_url}`"  
               alt="Post Image"
             />
           </RouterLink>
@@ -73,34 +73,30 @@
     </div>
   </template>
   <script setup>
-  import { ref, onMounted, computed } from 'vue'
+  import { onMounted, computed } from 'vue'
   import { useProfilesStore } from '@/stores/profile'
   import { useRoute, useRouter } from 'vue-router'
   import imageFallback from '@/assets/image-fallback.jpg'
   import honeycomb from '@/assets/honeycomb.png'
-
   
   const backgroundImage = `url(${honeycomb})`
   
   const router = useRouter()
   
   const profilesStore = useProfilesStore()
+
+  const backendBaseurl = computed(() => import.meta.env.VITE_API_URL);
   
   const route = useRoute();
-  const currentPagePath = computed(() => route.fullPath); // Ensure the full path is computed
   
-  // Log the computed value
-  console.log("aaaaqqq");
-  console.log(currentPagePath.value); // Accessing the computed value with .value
-  
-  const username = route.params.index // Fetch the username passed via the route
-  const profile = computed(() => profilesStore.profiles[username]);
+  const id = +route.params.index 
+  const profile = computed(() => profilesStore.profiles[id]);
 
   console.log(profile);
   console.log(profilesStore.profiles);
   
   onMounted(async () => {
-    profile.value = await profilesStore.fetchProfile(username)
+    profile.value = await profilesStore.fetchProfile(id)
   })
   </script>
   

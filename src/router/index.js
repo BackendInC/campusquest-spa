@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,11 +44,6 @@ const router = createRouter({
       path: '/profile-:index',
       name: 'profile-friend',
       component: () => import('../views/Profile.vue'),
-    },
-    {
-      path: '/post/:postId',
-      name: 'Post',
-      component: () => import('../views/PostView.vue'),
     },
     {
       path: '/post-:index', 
@@ -102,5 +98,15 @@ const router = createRouter({
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore();
+  
+  if (["/profile", "/friends", "/qr", "/costomize"].includes(to.path) && !auth.isLoggedIn) {
+    next({ path: "/login", replace: true });
+  } else {
+    next();
+  }
+});
 
 export default router

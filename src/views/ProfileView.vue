@@ -56,9 +56,9 @@
     <div
       class="bg-white w-full rounded-t-[2rem] px-4 pt-6 grid grid-cols-3 h-full gap-1 content-start"
     >
-      <div v-for="(post, index) in profile?.posts" :key="post.post_id" class="w-full aspect-square object-cover overflow-hidden">
-        <RouterLink :to="`/post-${index}`" class="w-full h-full">
-          <img :src="`${backendBaseurl}${post.image_url}`" alt="Post Image" class="w-full h-full"/>
+      <div v-for="(post) in profile?.posts" :key="post.id" class="w-full aspect-square object-cover overflow-hidden">
+        <RouterLink :to="`/post-${post.id}`" class="w-full h-full">
+          <img :src="`${backendBaseurl}${post.image_url}`" alt="Post Image" class="w-full h-full rounded-md"/>
         </RouterLink>
       </div>
     </div>
@@ -77,6 +77,7 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore();
 
 import honeycomb from '@/assets/honeycomb.png'
+import fallbackImageUrl from '@/assets/image-fallback.jpg'
 const backgroundImage = `url(${honeycomb})`
 
 const userProfileStore = useProfilesStore()
@@ -85,9 +86,12 @@ const profile = computed(() => userProfileStore.profiles[authStore.userData.user
 
 const backendBaseurl = computed(() => import.meta.env.VITE_API_URL);
 
-const profileImageSrc = computed(() => `${backendBaseurl.value}users/profile_picture/${authStore.userData.username}`);
+const profileImageSrc = computed(() => {
+  const baseUrl = backendBaseurl.value;
+  const profilePicUrl = `${baseUrl}users/profile_picture/${authStore.userData.username}`;
 
-
+  return profile?.hasProfilePicture ? profilePicUrl : fallbackImageUrl;
+});
 
 onMounted(() => {
   userProfileStore.fetchProfile(authStore.userData.user_id)

@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import { useFetch } from '@vueuse/core'
+import { useStorage } from "@vueuse/core";
 
 export const useAuthStore = defineStore('auth', () => {
-  const userData = ref({
+  const userData = useStorage("userData", {
     user_id: null,
     username: null,
     email: null,
     profilePhoto: '',
     jwt: '',
-  })
+  });
 
-  const isLoggedIn = ref(false)
+  const isLoggedIn = useStorage("isLoggedIn", false)
 
-  const isAdmin = ref(false)
+  const isAdmin = useStorage("isAdmin", false)
 
   async function fetchUserData() {
     // TODO: Fetch user data from the server
@@ -101,15 +101,15 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout() {
-    // TODO: Implement logout
-    // Simulate a logout request
-    return new Promise(resolve => {
-      setTimeout(() => {
-        userData.value.email = ''
-        isLoggedIn.value = false
-        resolve()
-      }, 500)
-    })
+    userData.value = {
+      user_id: null,
+      username: null,
+      email: null,
+      profilePhoto: '',
+      jwt: '',
+    };
+    isLoggedIn.value = false;
+    isAdmin.value = false;
   }
 
   function updateUserName(newName) {
