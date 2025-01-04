@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useFetch } from '@vueuse/core'
 import { useStorage } from "@vueuse/core";
+import {ref} from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
   const userData = useStorage("userData", {

@@ -23,7 +23,7 @@
         <div class="flex items-center justify-between self-stretch">
           <img
             class="w-24 aspect-square object-cover rounded-xl"
-            :src="profile?.profilePhoto || imageFallback"
+            :src="profileImageSrc || imageFallback"
             alt="Profile Photo"
           />
           <div class="w-full flex items-center justify-evenly">
@@ -94,9 +94,11 @@
 
   console.log(profile);
   console.log(profilesStore.profiles);
+
+  const profileImageSrc = computed(() => `${backendBaseurl.value}/users/profile_picture/${profile.value?.username}`);
   
   onMounted(async () => {
-    profile.value = await profilesStore.fetchProfile(id)
+    profilesStore.fetchProfile(id)
   })
   </script>
   
