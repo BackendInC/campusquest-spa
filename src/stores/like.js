@@ -11,7 +11,7 @@ export const useLikeStore = defineStore('likes', () => {
   async function fetchLikes(post_id) {
       const authStore = useAuthStore();
     try {
-      const { data, error } = await useFetch(`${import.meta.env.VITE_API_URL}/posts/${post_id}/likes`, {
+      const { data, error } = await useFetch(`${import.meta.env.VITE_API_URL}/posts/like/${post_id}`, {
         headers: {
           Authorization: `Bearer ${authStore.userData.jwt}`
         }
@@ -31,7 +31,7 @@ export const useLikeStore = defineStore('likes', () => {
   async function toggleLike(post_id) {
     const authStore = useAuthStore();
     try {
-        const { data, error } = await useFetch(`${import.meta.env.VITE_API_URL}/posts/${post_id}/like`, {
+        const { data, error } = await useFetch(`${import.meta.env.VITE_API_URL}/posts/like/${post_id}`, {
             headers: {
               Authorization: `Bearer ${authStore.userData.jwt}`
             },
@@ -54,7 +54,7 @@ export const useLikeStore = defineStore('likes', () => {
   async function fetchIsLikedByMe(post_id) {
     const authStore = useAuthStore();
     try {
-        const { data, error } = await useFetch(`${import.meta.env.VITE_API_URL}/posts/${post_id}/like`, {
+        const { data, error } = await useFetch(`${import.meta.env.VITE_API_URL}/posts/like/${post_id}`, {
             headers: {
               Authorization: `Bearer ${authStore.userData.jwt}`
             },

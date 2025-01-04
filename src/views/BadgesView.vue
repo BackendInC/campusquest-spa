@@ -22,21 +22,25 @@
       </div>
     </div>
 
+    <div class="text-right">
+      <p class="text-lg font-semibold text-gray-500 mt-2">Total Tokens: {{ badgeStore.totalTokens }}</p>
+    </div>
+
     <div class="relative z-10 mt-4">
       <ul class="space-y-4">
         <li
-          v-for="achievement in achievements"
-          :key="achievement.id"
+          v-for="achievement in badgeStore.userDetailedAchievements"
+          :key="achievement?.id"
           class="bg-white p-4 shadow-md rounded-lg flex items-center space-x-4"
         >
           <p class="pi pi-shield text-black text-3xl"></p>
 
           <div>
             <h3 class="text-lg font-semibold text-gray-700">
-              {{ achievement.description }}
+              {{ achievement?.description }}
             </h3>
             <p class="text-sm text-gray-500">
-              Award Tokens: {{ achievement.award_tokens }}
+              Award Tokens: {{ achievement?.award_tokens }}
             </p>
           </div>
         </li>
@@ -47,16 +51,18 @@
 
 <script setup>
 import honeycomb from '@/assets/honeycomb.png'
-const backgroundImage = `url(${honeycomb})`
-
 import { onMounted } from 'vue'
 import { useBadgeStore } from '@/stores/badge'
+import {useAuthStore} from '@/stores/auth'
+
+const backgroundImage = `url(${honeycomb})`
+
 
 const badgeStore = useBadgeStore()
+const authStore = useAuthStore();
 
-onMounted(() => {
+onMounted(async () => {
   badgeStore.fetchBadges()
+  badgeStore.fetchUserBadges(authStore.userData.username)
 })
-
-const achievements = badgeStore.achievements
 </script>
