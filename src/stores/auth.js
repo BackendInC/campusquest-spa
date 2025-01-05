@@ -151,8 +151,18 @@ export const useAuthStore = defineStore('auth', () => {
     // TODO: Implement requestPasswordReset
   }
 
-  function updateUserBee(beeID) {
-    // TODO: Implement updateUserBee
+  async function updateUserBee(beeID) {
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/users_change_bee?new_bee='+beeID,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userData.value.jwt}`,
+        }
+      },
+    )
+    return error.value
   }
 
   return {

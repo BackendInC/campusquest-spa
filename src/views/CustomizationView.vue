@@ -62,7 +62,9 @@
     <RouterLink to="/settings">
       <i class="pi-arrow-left pi text-xl text-white"></i>
     </RouterLink>
-    <p class="bg-gray-100 text-gray-800 py-1.5 px-4 rounded-lg">Save</p>
+    <div @click="authStore.updateUserBee(selectedBee)">
+      <p class="bg-gray-100 text-gray-800 py-1.5 px-4 rounded-lg">Save</p>
+    </div>
   </div>
 </template>
 
@@ -71,7 +73,9 @@ import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useBees } from '@/composables/useBees'
 import { useAuthStore } from '@/stores/auth'
-
+import { useProfilesStore } from '@/stores/profile'
+import { onMounted, computed } from 'vue'
+const userProfileStore = useProfilesStore()
 import honeycomb from '@/assets/honeycomb.png'
 const backgroundImage = `url(${honeycomb})`
 
@@ -79,4 +83,11 @@ const selectedBee = ref(1)
 
 const bees = useBees()
 const authStore = useAuthStore()
+
+onMounted(async () => {
+  console.log(authStore.userData.user_id)
+  await userProfileStore.fetchProfile(authStore.userData.user_id)
+  console.log("seleted bee: ", userProfileStore.profiles[authStore.userData.user_id].selectedBee)
+  selectedBee.value = userProfileStore.profiles[authStore.userData.user_id].selectedBee
+})
 </script>

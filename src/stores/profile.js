@@ -59,6 +59,7 @@ export const useProfilesStore = defineStore('profiles', () => {
         numQuestsCompleted: profileData.value.num_quests_completed || 0,
         numFriends: profileData.value.num_friends || 0,
         posts: postsData.value || [], // Store posts directly
+        selectedBee: profileData.value.selected_bee,
       };
 
       profiles.value[userId] = profile;

@@ -3,6 +3,7 @@
     <div class="flex flex-col gap-2">
       <p class="text-center text-lg">Show your QR code</p>
       <qrcode-vue
+        v-if="beeImage != ''"
         style="padding: 0 2rem; width: 100%; height: auto; max-height: 60vh"
         level="H"
         :render-as="renderAs"
@@ -52,6 +53,8 @@ import { useBees } from '@/composables/useBees'
 import { toRaw } from 'vue'
 import Dialog from 'primevue/dialog'
 import { QrScanner } from '@diningcity/capacitor-qr-scanner'
+import { onMounted, computed } from 'vue'
+
 const toast = useToast()
 const authStore = useAuthStore()
 const friendsStore = useFriendsStore()
@@ -59,34 +62,55 @@ const bees = useBees()
 
 const newfriend_visible = ref(false);
 const friend_fail_visible = ref(false);
-const friendBeeImage = ref(bees.getBeeAvatar(4).image); 
+const friendBeeImage = ref(bees.getBeeAvatar(1).image); 
 const friendName = ref(null); 
 const failure_detail = ref(null);
 
 const scan_qr = async () => {
-  const { qr_reading } = await QrScanner.scanQrCode()
-  // const qr_reading = ' 1 '
+  //const { qr_reading } = await QrScanner.scanQrCode()
+  const qr_reading = ' 2 '
   const result = qr_reading.trim()
   const server_response = await friendsStore.addFriend(result)
   console.log(server_response);
   friend_fail_visible.value = (server_response.error)
   failure_detail.value = server_response.detail
   friendName.value = server_response.name
+  await userProfileStore.fetchProfile(qr_reading)
+  let friendsBee = userProfileStore.profiles[qr_reading].selectedBee
+if (friendsBee == 0) friendsBee = 1
+  friendBeeImage.value = bees.getBeeAvatar(friendsBee).image
   newfriend_visible.value = (!server_response.error)
 }
 
 const renderAs = ref<RenderAs>('svg');
-let beeID = toRaw(authStore.userData).beeID
-if (!beeID) beeID = 1
-const beeImage = bees.getBeeAvatar(beeID).image
-console.log(beeImage)
+const selectedBee = ref(1)
+const beeImage = ref('')
+
 const imageSettings = ref<ImageSettings>({
-    src: beeImage,
+    src: beeImage.value,
     width: 60,
     height: 60,
     excavate: false,
     })
 
+import { useProfilesStore } from '@/stores/profile'
+const userProfileStore = useProfilesStore()
+onMounted(async () => {
+  console.log(authStore.userData.user_id)
+  await userProfileStore.fetchProfile(authStore.userData.user_id)
+  selectedBee.value = userProfileStore.profiles[authStore.userData.user_id].selectedBee
+if (selectedBee.value == 0) selectedBee.value = 1
+  console.log("seleted bee: ", selectedBee.value)
+  beeImage.value = bees.getBeeAvatar(selectedBee.value).image
+console.log(beeImage.value)
+
+imageSettings.value = {
+    src: beeImage.value,
+    width: 60,
+    height: 60,
+    excavate: false,
+    }
+})
 </script>
 
 <style lang="scss" scoped></style>
