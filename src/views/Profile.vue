@@ -37,7 +37,8 @@
         <div class="flex items-center justify-between self-stretch">
           <img
             class="w-24 aspect-square object-cover rounded-xl"
-            :src="profileImageSrc || imageFallback"
+            :src="profileImageSrc"
+            @error="(e) => e.target.src = imageFallback"
             alt="Profile Photo"
           />
           <div class="w-full flex items-center justify-evenly">

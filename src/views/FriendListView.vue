@@ -29,6 +29,7 @@
           <div class="flex items-center">
             <img
               :src="`${backendBaseurl}${friend.profile_picture_url}`"
+              @error="(e) => e.target.src = imageFallBack"
               alt="Profile Picture"
               class="w-12 h-12 rounded-full object-cover"
               />
@@ -62,6 +63,7 @@
   import honeycomb from '@/assets/bw-honeycomb.png'
   import Dialog from 'primevue/dialog'
   import { useToast } from 'primevue/usetoast';
+  import imageFallBack from '@/assets/image-fallback.jpg'
 
   const toast = useToast();
 

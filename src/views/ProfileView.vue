@@ -29,6 +29,7 @@
         <img
           class="w-24 aspect-square object-cover rounded-xl"
           :src="profileImageSrc"
+          @error="(e) => e.target.src = fallbackImageUrl"
         />
         <div class="w-full flex items-center justify-evenly">
           <div class="flex flex-col items-center">

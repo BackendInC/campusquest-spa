@@ -10,10 +10,6 @@ export const useProfilesStore = defineStore('profiles', () => {
 
   async function fetchProfile(userId) {
     const authStore = useAuthStore();
-    if (profiles.value[userId]) {
-      // Avoid redundant API calls
-      return profiles.value[userId];
-    }
 
     try {
       // Fetch profile data
