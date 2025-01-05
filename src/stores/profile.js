@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth'
 export const useProfilesStore = defineStore('profiles', () => {
   const profiles = ref({});
   const posts = ref({});
+  const authStore = useAuthStore();
 
   async function fetchProfile(userId) {
     const authStore = useAuthStore();
@@ -106,7 +107,6 @@ export const useProfilesStore = defineStore('profiles', () => {
   }
 
   async function fetchPostById(postId){
-    const authStore = useAuthStore();
      try {
     const { data , error } = await useFetch(
       `${import.meta.env.VITE_API_URL}/posts/${postId}`,
@@ -129,11 +129,26 @@ export const useProfilesStore = defineStore('profiles', () => {
   }
   }
 
+  async function banUser(userId) {
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + `/ban_user/${userId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authStore.userData.jwt}`,
+        },
+      },
+    )
+    return error.value
+  }
+  
   return {
     profiles,
     fetchProfile,
     deletePost,
     fetchPostById,
-    posts
+    posts,
+    banUser
   };
 });

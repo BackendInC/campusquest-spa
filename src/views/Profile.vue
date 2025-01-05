@@ -13,12 +13,26 @@
         <button @click="router.back" class="pi pi-arrow-left text-white text-lg mr-8"></button>
   
         <!-- Name -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between items-center">
           <h1 class="text-white text-2xl">
             {{ profile?.username || 'Loading...' }}
           </h1>
-        </div>
-  
+          <i @click="ban_visible = true" v-if="authStore.isAdmin" class="ml-2 mt-1 pi pi-ban text-white text-2xl"></i>
+         </div>
+        <Dialog v-model:visible="ban_visible" modal header="Ban user" :style="{ width: '25rem' }" :draggable="false">
+          <div class="flex flex-col">
+            <span class="text-surface-500 dark:text-surface-400 block mb-2">Enter the reason for banning {{profile?.username}}:</span>
+            <Form v-slot="$form" @submit="onBanUser" class="flex flex-col gap-4 w-full">
+           
+          <InputText v-model="ban_reason" name="username" type="text" class="mb-2" required/>
+          <div class="flex justify-center ">
+          <Button class="mx-1" type="button" label="Cancel" severity="secondary" @click="ban_visible = false"></Button>
+          <Button class="mx-1" type="submit" severity="danger" label="Ban"></Button>
+          </div>
+          </Form>
+          </div>
+        </Dialog>
+      
         <!-- Profile Photo and Stats -->
         <div class="flex items-center justify-between self-stretch">
           <img
@@ -73,11 +87,18 @@
     </div>
   </template>
   <script setup>
-  import { onMounted, computed } from 'vue'
+  import { ref, onMounted, computed } from 'vue'
   import { useProfilesStore } from '@/stores/profile'
   import { useRoute, useRouter } from 'vue-router'
   import imageFallback from '@/assets/image-fallback.jpg'
   import honeycomb from '@/assets/honeycomb.png'
+  import { useAuthStore } from '@/stores/auth'
+  const authStore = useAuthStore()
+  import Dialog from 'primevue/dialog'
+  import InputText from 'primevue/inputtext'
+  import Button from 'primevue/button';
+  import { useToast } from 'primevue/usetoast'
+  import { Form } from '@primevue/forms';
   
   const backgroundImage = `url(${honeycomb})`
   
@@ -96,9 +117,22 @@
   console.log(profilesStore.profiles);
 
   const profileImageSrc = computed(() => `${backendBaseurl.value}/users/profile_picture/${profile.value?.username}`);
+
+  const ban_visible = ref(false)
+  const ban_reason = ref('')
   
   onMounted(async () => {
     profilesStore.fetchProfile(id)
   })
+
+  const toast = useToast()
+  const onBanUser = ({ valid }) => {
+  ban_visible.value = false
+  if (valid) {
+  profilesStore.banUser(id)
+  toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
+  }
+  }
+
   </script>
   

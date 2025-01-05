@@ -9,8 +9,8 @@
             }"
     >
     <h1 class="text-2xl font-bold text-white">Quests</h1>
-    <RouterLink to="/quest-create">
-      <i v-if="authStore.isAdmin" class="pi pi-plus-circle text-white text-2xl"></i>
+    <RouterLink v-if="authStore.isAdmin" to="/quest-create">
+      <i class="pi pi-plus-circle text-white text-2xl"></i>
     </RouterLink>
     </div>
 
