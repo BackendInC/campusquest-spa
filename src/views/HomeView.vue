@@ -25,7 +25,7 @@
               <h2 class="text-xs font-light">{{ post.quest_name }}</h2>
             </div>
             </div>
-            <i @click="delete_visible = true" v-if="!authStore.isAdmin" class="pt-2 pr-3 pi pi-trash text-black text-2xl"></i>
+            <i @click="delete_visible = true" v-if="authStore.isAdmin" class="pt-2 pr-3 pi pi-trash text-black text-2xl"></i>
             <Dialog v-model:visible="delete_visible" modal header="Delete post" :style="{ width: '25rem' }" :draggable="false">
               <span class="text-center text-surface-500 dark:text-surface-400 block mb-4">Are you sure of deleting this post?</span>
               <div class="flex justify-center">
