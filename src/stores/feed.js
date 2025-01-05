@@ -86,7 +86,7 @@ export const useFeedStore = defineStore('feed', () => {
 
     const is_liked = await (async () => {
       const { isFetching, error, data } = await useFetch(
-        import.meta.env.VITE_API_URL + `/posts/${rawPost.id}/like`,
+        import.meta.env.VITE_API_URL + `/posts/like/${rawPost.id}`,
         {
           method: 'GET',
           headers: {
@@ -98,7 +98,17 @@ export const useFeedStore = defineStore('feed', () => {
       return data.value === 'true'
     })()
 
-    const profile_image = import.meta.env.VITE_API_URL + `/users/profile_picture/${username}`
+    const test_picture = await (async () => {
+      const { isFetching, error, data } = await useFetch(
+        import.meta.env.VITE_API_URL + `/users/profile_picture/${username}`,
+        {
+          method: 'GET',
+        },
+      )
+      return error.value
+    })()
+    
+    const profile_image = (test_picture)? imageFallBack : (import.meta.env.VITE_API_URL + `/users/profile_picture/${username}`)
 
     return {
       post_id: rawPost.id,
@@ -166,10 +176,27 @@ export const useFeedStore = defineStore('feed', () => {
     // TODO: Implement downvotePost
   }
 
+
+  async function deletePost(postId) {
+    const { isFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + `/posts/${postId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authStore.userData.jwt}`,
+        },
+      },
+    )
+    return error.value
+  }
+
+  
   return {
     feedSelector,
     posts,
     upvotePost,
     downvotePost,
+    deletePost
   }
 })

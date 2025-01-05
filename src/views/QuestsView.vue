@@ -1,14 +1,17 @@
 <template>
-  <div class="w-full h-full bg-white">
-    <div
-      class="px-4 pt-20 pb-4 flex flex-col gap-4 bg-emerald-500 rounded-b-3xl mb-2"
-      :style="{
-        backgroundImage: backgroundImage,
-        backgroundBlendMode: 'luminosity',
-        backgroundPosition: 'center',
-      }"
+<div class="w-full h-full bg-white">
+  <div
+    class="px-4 pt-20 pb-4 flex gap-4 bg-emerald-500 rounded-b-3xl mb-2 justify-between items-center"
+    :style="{
+            backgroundImage: backgroundImage,
+            backgroundBlendMode: 'luminosity',
+            backgroundPosition: 'center',
+            }"
     >
-      <h1 class="text-2xl font-bold text-white">Quests</h1>
+    <h1 class="text-2xl font-bold text-white">Quests</h1>
+    <RouterLink v-if="authStore.isAdmin" to="/quest-create">
+      <i class="pi pi-plus-circle text-white text-2xl"></i>
+    </RouterLink>
     </div>
 
     <!-- Quests Upload Dialog -->
@@ -116,7 +119,8 @@ import { onBeforeMount, ref } from 'vue'
 import { Camera, CameraResultType } from '@capacitor/camera'
 import { useQuestsStore } from '@/stores/quests'
 import { useAuthStore } from '@/stores/auth'
-
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
 const authStore = useAuthStore()
 
 onBeforeMount(async () => {

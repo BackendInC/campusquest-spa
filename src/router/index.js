@@ -92,8 +92,8 @@ const router = createRouter({
       component: () => import('../views/PrivacyPolicyView.vue'),
     },
     {
-      path: '/quest_create',
-      name: 'quest_create',
+      path: '/quest-create',
+      name: 'quest-create',
       component: () => import('../views/QuestCreate.vue'),
     },
   ],
