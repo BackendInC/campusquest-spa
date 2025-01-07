@@ -164,6 +164,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function updateUserBee(beeID) {
+    console.log('BEE')
     const { isFetching, error, data } = await useFetch(
       import.meta.env.VITE_API_URL + '/users_change_bee?new_bee=' + beeID,
       {
@@ -174,6 +175,8 @@ export const useAuthStore = defineStore('auth', () => {
         },
       },
     )
+    console.log(error)
+    console.log(data)
     return error.value
   }
 

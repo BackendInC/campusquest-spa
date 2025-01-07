@@ -34,7 +34,7 @@
         class="flex flex-col rounded-lg p-2 transition"
         v-for="bee in bees.beeAvatars"
         v-bind:key="bee.id"
-        @click="selectedBee = bee.id"
+        @click="updateBee(bee.id)"
         :class="{ 'bg-zinc-200': selectedBee === bee.id }"
       >
         <div class="relative">
@@ -49,7 +49,6 @@
         </div>
         <button
           class="text-white bg-[#313131] py-2 px-5 -mt-3 rounded-full text-center z-20"
-          @click="authStore.updateUserBee(selectedBee)"
         >
           {{ bee.name }}
         </button>
@@ -62,9 +61,6 @@
     <RouterLink to="/settings">
       <i class="pi-arrow-left pi text-xl text-white"></i>
     </RouterLink>
-    <div @click="authStore.updateUserBee(selectedBee)">
-      <p class="bg-gray-100 text-gray-800 py-1.5 px-4 rounded-lg">Save</p>
-    </div>
   </div>
 </template>
 
@@ -84,10 +80,13 @@ const selectedBee = ref(1)
 const bees = useBees()
 const authStore = useAuthStore()
 
+const updateBee = beeID => {
+  selectedBee.value = beeID
+  authStore.updateUserBee(beeID)
+}
+
 onMounted(async () => {
   console.log(authStore.userData.user_id)
   await userProfileStore.fetchProfile(authStore.userData.user_id)
-  console.log("seleted bee: ", userProfileStore.profiles[authStore.userData.user_id].selectedBee)
-  selectedBee.value = userProfileStore.profiles[authStore.userData.user_id].selectedBee
 })
 </script>
