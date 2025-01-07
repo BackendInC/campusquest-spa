@@ -18,7 +18,19 @@ export const useAuthStore = defineStore('auth', () => {
   const api_url = ref(import.meta.env.VITE_API_URL)
 
   async function fetchUserData() {
-    // TODO: Fetch user data from the server
+    const { ifFetching, error, data } = await useFetch(
+      import.meta.env.VITE_API_URL + '/user_info',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userData.value.jwt}`,
+        },
+      },
+    )
+
+    data.value = JSON.parse(data.value)
+    isAdmin.value = data.value.is_admin
   }
 
   async function register(username, email, password) {
@@ -153,13 +165,13 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function updateUserBee(beeID) {
     const { isFetching, error, data } = await useFetch(
-      import.meta.env.VITE_API_URL + '/users_change_bee?new_bee='+beeID,
+      import.meta.env.VITE_API_URL + '/users_change_bee?new_bee=' + beeID,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userData.value.jwt}`,
-        }
+        },
       },
     )
     return error.value

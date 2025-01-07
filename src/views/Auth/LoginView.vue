@@ -106,6 +106,8 @@ const onFormSubmit = async ({ valid, states }) => {
       states.password.value,
     )
 
+    await authStore.fetchUserData()
+
     if (error.value) {
       if (error.value === 'Unauthorized') {
         router.push({ name: 'email_check' })
